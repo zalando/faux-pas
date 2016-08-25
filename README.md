@@ -62,14 +62,14 @@ Add the following dependency to your project:
 
 *Faux Pas* has a variant of every major functional interface from the Java core:
 
- - [`ThrowingRunnable`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingRunnable.java)
- - [`ThrowingSupplier`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingSupplier.java)
- - [`ThrowingConsumer`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingConsumer.java)
- - [`ThrowingFunction`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingFunction.java)
- - [`ThrowingPredicate`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingPredicate.java)
- - [`ThrowingBiConsumer`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiConsumer.java)
- - [`ThrowingBiFunction`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiFunction.java)
- - [`ThrowingBiPredicate`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiPredicate.java)
+ - [`ThrowingRunnable`](src/main/java/org/zalando/fauxpas/ThrowingRunnable.java)
+ - [`ThrowingSupplier`](src/main/java/org/zalando/fauxpas/ThrowingSupplier.java)
+ - [`ThrowingConsumer`](src/main/java/org/zalando/fauxpas/ThrowingConsumer.java)
+ - [`ThrowingFunction`](src/main/java/org/zalando/fauxpas/ThrowingFunction.java)
+ - [`ThrowingPredicate`](src/main/java/org/zalando/fauxpas/ThrowingPredicate.java)
+ - [`ThrowingBiConsumer`](src/main/java/org/zalando/fauxpas/ThrowingBiConsumer.java)
+ - [`ThrowingBiFunction`](src/main/java/org/zalando/fauxpas/ThrowingBiFunction.java)
+ - [`ThrowingBiPredicate`](src/main/java/org/zalando/fauxpas/ThrowingBiPredicate.java)
 
 The followings statements apply to each of them:
 - extends the official interface, i.e. they are 100% compatible
