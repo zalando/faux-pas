@@ -104,15 +104,28 @@ two strategies available by default:
 
 #### Logging
 
-- TODO default values
+The `FauxPas.logging()` strategy handles any raised exception by logging them to a customizable logger and falling
+back to default values, i.e. `null` or `false` depending on the interface.
 
 #### Rethrow
 
-- TODO unchecked
-- TODO unchecked + custom transformer
-- TODO sneakily
+The `FauxPas.rethrow()` strategy handles any raised exception by either rethrowing them directly, e.g. `Error` and
+`RuntimeException` or by wrapping them meaningful unchecked exceptions, e.g. `UncheckedIOException` or
+`RuntimeException`. It allows to customize the whole transformation process or only the fallback part:
 
-### Try-with alternative
+```java
+function.with(rethrow(myHandling)) // completely defines exception transformation
+```
+
+```java
+function.with(rethrow(checked(myFallback))) // only transform unmapped exceptions
+```
+
+```java
+function.with(rethrow(sneakily())) // uses Lombok's @SneakyThrows to re-throw checked exceptions without declaring it
+```
+
+### Try-with-resources alternative
 
 Traditional `try-with-resources` statements are compiled into byte code that includes
 [unreachable parts](http://stackoverflow.com/a/17356707) and unfortunately JaCoCo has no
