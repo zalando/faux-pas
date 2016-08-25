@@ -3,8 +3,8 @@ package org.zalando.fauxpas.io;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.zalando.fauxpas.ThrowingRunnable;
-import org.zalando.fauxpas.ThrowingSupplier;
+import org.zalando.fauxpas.ThrowingConsumer;
+import org.zalando.fauxpas.ThrowingFunction;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -34,26 +34,26 @@ public final class TryWithTest {
     private final Closeable closable = mock(Closeable.class);
 
     @SuppressWarnings("unchecked")
-    private final ThrowingRunnable<Exception> runnable = mock(ThrowingRunnable.class);
+    private final ThrowingConsumer<Closeable, Exception> consumer = mock(ThrowingConsumer.class);
 
     @SuppressWarnings("unchecked")
-    private final ThrowingSupplier<?, Exception> supplier = mock(ThrowingSupplier.class);
+    private final ThrowingFunction<Closeable, ?, Exception> function = mock(ThrowingFunction.class);
 
     @Test
     public void shouldCloseAfterRunningWithoutException() throws Exception {
         final Closeable closable = mock(Closeable.class);
 
-        tryWith(runnable, closable);
+        tryWith(closable, consumer);
 
-        verify(runnable).tryRun();
+        verify(consumer).tryAccept(closable);
         verify(closable).close();
     }
 
     @Test
     public void shouldCloseAfterRunningWithException() throws Exception {
-        doThrow(exception).when(runnable).tryRun();
+        doThrow(exception).when(consumer).tryAccept(closable);
 
-        final Exception e = expectThrows(Exception.class, this::runRunnable);
+        final Exception e = expectThrows(Exception.class, this::runConsumer);
 
         assertThat(e, is(sameInstance(exception)));
 
@@ -64,29 +64,29 @@ public final class TryWithTest {
     public void shouldCloseAfterRunningAndExposeExceptionWhenFailingToClose() throws Exception {
         doThrow(ioException).when(closable).close();
 
-        final IOException e = expectThrows(IOException.class, this::runRunnable);
+        final IOException e = expectThrows(IOException.class, this::runConsumer);
 
         assertThat(e, is(sameInstance(ioException)));
     }
 
     @Test
     public void shouldCloseAfterRunningAndSupressExceptionWhenFailingToClose() throws Exception {
-        doThrow(exception).when(runnable).tryRun();
+        doThrow(exception).when(consumer).tryAccept(closable);
         doThrow(ioException).when(closable).close();
 
-        final Exception e = expectThrows(Exception.class, this::runRunnable);
+        final Exception e = expectThrows(Exception.class, this::runConsumer);
 
         assertThat(e, is(sameInstance(exception)));
         assertThat(e.getSuppressed(), hasItemInArray(sameInstance(ioException)));
     }
 
-    public void runRunnable() throws Exception {
-        tryWith(runnable, closable);
+    public void runConsumer() throws Exception {
+        tryWith(closable, consumer);
     }
 
     @Test
     public void shouldCloseAfterProvidingWithoutException() throws Exception {
-        doReturn(value).when(supplier).tryGet();
+        doReturn(value).when(function).tryApply(closable);
 
         final Object actual = runSupplier();
         assertThat(actual, is(sameInstance(value)));
@@ -96,7 +96,7 @@ public final class TryWithTest {
 
     @Test
     public void shouldCloseAfterProvidingWithException() throws Exception {
-        doThrow(exception).when(supplier).tryGet();
+        doThrow(exception).when(function).tryApply(closable);
 
         final Exception e = expectThrows(Exception.class, this::runSupplier);
 
@@ -107,20 +107,20 @@ public final class TryWithTest {
 
     @Test
     public void shouldCloseAfterProvidingAndExposeExceptionWhenFailingToClose() throws Exception {
-        doReturn(value).when(supplier).tryGet();
+        doReturn(value).when(function).tryApply(closable);
         doThrow(ioException).when(closable).close();
 
         final Exception e = expectThrows(Exception.class, this::runSupplier);
 
         assertThat(e, is(sameInstance(ioException)));
 
-        verify(supplier).tryGet();
+        verify(function).tryApply(closable);
         verify(closable).close();
     }
 
     @Test
     public void shouldCloseAfterProvidingAndSupressExceptionWhenFailingToClose() throws Exception {
-        doThrow(exception).when(supplier).tryGet();
+        doThrow(exception).when(function).tryApply(closable);
         doThrow(ioException).when(closable).close();
 
         final Exception e = expectThrows(Exception.class, this::runSupplier);
@@ -130,7 +130,7 @@ public final class TryWithTest {
     }
 
     public Object runSupplier() throws Exception {
-        return tryWith(supplier, closable);
+        return tryWith(closable, function);
     }
 
 }

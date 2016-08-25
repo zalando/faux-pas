@@ -1,6 +1,6 @@
 # Faux Pas: Error handling in Functional Programming
 
-![Banner 888×244](docs/banner.png)
+[![Banner 888×244](docs/spilled-coffee.jpg)](https://pixabay.com/en/mistake-spill-slip-up-accident-876597/)
 
 [![Build Status](https://img.shields.io/travis/zalando-incubator/faux-pas.svg)](https://travis-ci.org/zalando-incubator/faux-pas)
 [![Coverage Status](https://img.shields.io/coveralls/zalando-incubator/faux-pas.svg)](https://coveralls.io/r/zalando-incubator/faux-pas)
@@ -17,62 +17,71 @@ this project is trying to accomplish and why it matters.
 Describe the problem(s) this project solves.
 Describe how this software can improve the lives of its audience.
 
-- **Technology stack**: Indicate the technological nature of the software, including primary programming language(s) and whether the software is intended as standalone or as a module in a framework or other ecosystem.
-- **Status**:  Alpha, Beta, 1.1, etc. It's OK to write a sentence, too. The goal is to let interested people know where this project is at. This is also a good place to link to the [CHANGELOG](CHANGELOG.md).
-- **Links to production or demo instances**
+- **Technology stack**: Java 8+, functional interfaces
+- **Status**:  Alpha, Beta, 1.1, etc. It's OK to write a sentence, too. The goal is to let interested people know where this project is at.
 - Describe what sets this apart from related-projects. Linking to another doc or page is OK if this can't be expressed in a sentence or two.
 
 ## Example
 
-If the software has visual components, place a screenshot after the description; e.g.,
+```java
+interface Client {
+    User read(final String name) throws IOException;
+}
+
+ThrowingFunction<String, User, IOException> loadUser = client::read;
+Function<String, User> loadUserUnchecked = loadUser.with(unchecked());
+```
+
+## Features
+
+- Unchecked exceptions
 
 ## Dependencies
 
-Describe any dependencies that must be installed for this software to work.
-This includes programming languages, databases or other storage mechanisms, build tools, frameworks, and so forth.
-If specific versions of other software are required, or known not to work, call that out.
+- Java 8
 
 ## Installation
 
-Detailed instructions on how to install, configure, and get the project running.
-This should be frequently tested to ensure reliability. Alternatively, link to
-a separate [INSTALL](INSTALL.md) document.
+Add the following dependency to your project:
 
-## Configuration
-
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
+```xml
+<dependency>
+    <groupId>org.zalando</groupId>
+    <artifactId>faux-pas</artifactId>
+    <version>${faux-pas.version}</version>
+</dependency>
+```
 
 ## Usage
 
-Show users how to use the software.
-Be specific.
-Use appropriate formatting when showing code snippets.
+### Throwing functional interfaces
 
-## Known issues
+### Try-with alternative
 
-Document any known significant shortcomings with the software.
+Traditional `try-with` statements are compiled into byte code that includes
+[unreachable parts](http://stackoverflow.com/a/17356707) and unfortunately JaCoCo has no
+[support for filtering](https://github.com/jacoco/jacoco/wiki/FilteringOptions) yet. That's why we came up with an
+alternative implementation:
+
+```java
+
+tryWith(openStream(), stream -> {
+    process(stream);
+});
+
+```
 
 ## Getting Help
 
 If you have questions, concerns, bug reports, etc., please file an issue in this repository's [Issue Tracker](../../issues).
-
-- Specific (throws X)
-- throws Throwable
-- try* + extends Function
-  - Runnable
-  - Supplier
-  - Consumer
-  - Function
-  - Predicate
-  - BiConsumer
-  - BiFunction
-  - BiPredicate
 
 ## Getting Involved/Contributing
 
 To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. For
 more details, check the [contribution guidelines](CONTRIBUTING.md).
 
-## Credits and references
+## Alternatives
 
-- [CFPB Open Source Project Template](https://github.com/cfpb/open-source-project-template)
+- [Lombok's `@SneakyThrows`](https://projectlombok.org/features/SneakyThrows.html)
+- [Durian's Errors](https://github.com/diffplug/durian) (alternative to Faux Pas) 
+
