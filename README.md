@@ -92,7 +92,7 @@ As a workaround there is a static *factory* method for every interface type in`F
 `throwingRunnable`, `throwingSupplier` and so forth. It allows for concise one-line statements:
 
 ```java
-throwingFunction(client:.read).with(unchecked())
+throwingFunction(client::read).with(unchecked())
 ```
 
 ### Strategies
