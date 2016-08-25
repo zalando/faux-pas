@@ -1,5 +1,6 @@
 package org.zalando.fauxpas;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Executable;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -11,10 +12,13 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+import static org.zalando.fauxpas.FauxPas.rethrow;
 
 @RunWith(JUnitPlatform.class)
 public final class RethrowStrategyTest {
@@ -22,10 +26,18 @@ public final class RethrowStrategyTest {
     @SuppressWarnings("unchecked")
     private final Function<Throwable, RuntimeException> transformer = mock(Function.class);
     
-    private final Strategy unit = Strategies.rethrow(transformer);
+    private final Strategy unit = rethrow(transformer);
 
     @SuppressWarnings("ThrowableInstanceNeverThrown") // we're in fact throwing it, multiple times even...
     private final Exception exception = new Exception();
+
+    @BeforeEach
+    public void defaultBehaviour() {
+        when(transformer.apply(any())).thenAnswer(invocation -> {
+            final Throwable argument = invocation.getArgument(0);
+            return new IllegalStateException(argument);
+        });
+    }
 
     @Test
     public void shouldRethrowExceptionFromRunnable() {
@@ -135,7 +147,7 @@ public final class RethrowStrategyTest {
         assertThat(actual, is(sameInstance(exception)));
         verifyZeroInteractions(transformer);
 
-        expectThrows(RuntimeException.class, uncheckedThrower);
+        expectThrows(IllegalStateException.class, uncheckedThrower);
         verify(transformer).apply(same(exception));
     }
 

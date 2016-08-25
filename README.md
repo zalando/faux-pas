@@ -1,6 +1,6 @@
 # Faux Pas: Error handling in Functional Programming
 
-[![Banner 888×244](docs/spilled-coffee.jpg)](https://pixabay.com/en/mistake-spill-slip-up-accident-876597/)
+[![Spilled coffee](docs/spilled-coffee.jpg)](https://pixabay.com/en/mistake-spill-slip-up-accident-876597/)
 
 [![Build Status](https://img.shields.io/travis/zalando-incubator/faux-pas.svg)](https://travis-ci.org/zalando-incubator/faux-pas)
 [![Coverage Status](https://img.shields.io/coveralls/zalando-incubator/faux-pas.svg)](https://coveralls.io/r/zalando-incubator/faux-pas)
@@ -28,17 +28,22 @@ interface Client {
     User read(final String name) throws IOException;
 }
 
-ThrowingFunction<String, User, IOException> loadUser = client::read;
-Function<String, User> loadUserUnchecked = loadUser.with(unchecked());
+ThrowingFunction<String, User, IOException> readUser = client::read;
+
+readUser.apply("Bob"); // may throw IOException
+readUser.with(unchecked()).apply("Bob") // may throw UncheckedIOException
 ```
 
 ## Features
 
-- Unchecked exceptions
+- Checked exceptions for functional interfaces 
+- Flexible strategies for error handling
+- Compatible with the JDK types
 
 ## Dependencies
 
-- Java 8
+- Java 8 or higher
+- Lombok (no runtime dependency)
 
 ## Installation
 
@@ -56,19 +61,53 @@ Add the following dependency to your project:
 
 ### Throwing functional interfaces
 
+ - [`ThrowingRunnable`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingRunnable.java)
+ - [`ThrowingSupplier`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingSupplier.java)
+ - [`ThrowingConsumer`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingConsumer.java)
+ - [`ThrowingFunction`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingFunction.java)
+ - [`ThrowingPredicate`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingPredicate.java)
+ - [`ThrowingBiConsumer`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiConsumer.java)
+ - [`ThrowingBiFunction`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiFunction.java)
+ - [`ThrowingBiPredicate`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiPredicate.java)
+
+- each one extends their official counterpart
+- defaults to [*sneakily throwing*](https://projectlombok.org/features/SneakyThrows.html) the original exception
+
+### Strategies
+
+- TODO `with(Strategy)` performs transformation: `Throwing*` ➙ `*`
+
+#### Logging
+
+- TODO default values
+
+#### Rethrow
+
+- TODO unchecked
+- TODO unchecked + custom transformer
+- TODO sneakily
+
 ### Try-with alternative
 
-Traditional `try-with` statements are compiled into byte code that includes
+Traditional `try-with-resources` statements are compiled into byte code that includes
 [unreachable parts](http://stackoverflow.com/a/17356707) and unfortunately JaCoCo has no
 [support for filtering](https://github.com/jacoco/jacoco/wiki/FilteringOptions) yet. That's why we came up with an
-alternative implementation:
+alternative implementation. The [official example](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html)
+for the `try-with-resources` statement looks like this:
 
 ```java
+try (BufferedReader br =
+               new BufferedReader(new FileReader(path))) {
+    return br.readLine();
+}
+```
 
-tryWith(openStream(), stream -> {
-    process(stream);
-});
+Compared to ours:
 
+```java
+return tryWith(new BufferedReader(new FileReader(path)), br -> 
+    br.readLine()
+);
 ```
 
 ## Getting Help
@@ -83,5 +122,5 @@ more details, check the [contribution guidelines](CONTRIBUTING.md).
 ## Alternatives
 
 - [Lombok's `@SneakyThrows`](https://projectlombok.org/features/SneakyThrows.html)
-- [Durian's Errors](https://github.com/diffplug/durian) (alternative to Faux Pas) 
+- [Durian's Errors](https://github.com/diffplug/durian)
 

@@ -16,12 +16,13 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.zalando.fauxpas.FauxPas.logging;
 
 @RunWith(JUnitPlatform.class)
 public final class LoggingStrategyTest {
 
     private final Logger logger = mock(Logger.class);
-    private final Strategy unit = Strategies.logging(logger);
+    private final Strategy unit = logging(logger);
 
     @SuppressWarnings("ThrowableInstanceNeverThrown") // we're in fact throwing it, multiple times even...
     private final Exception exception = new Exception();
