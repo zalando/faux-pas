@@ -40,7 +40,7 @@ public final class FauxPas {
     }
 
     @SyntacticSugar
-    public static <T, X extends Throwable> ThrowingPredicate<T,X> throwingPredicate(
+    public static <T, X extends Throwable> ThrowingPredicate<T, X> throwingPredicate(
             final ThrowingPredicate<T, X> predicate) {
         return predicate;
     }
@@ -52,8 +52,8 @@ public final class FauxPas {
     }
 
     @SyntacticSugar
-    public static <T, R, U, X extends Throwable> ThrowingBiFunction<T, R, U, X> throwingBiFunction(
-            final ThrowingBiFunction<T, R, U, X> function) {
+    public static <T, U, R, X extends Throwable> ThrowingBiFunction<T, U, R, X> throwingBiFunction(
+            final ThrowingBiFunction<T, U, R, X> function) {
         return function;
     }
 
@@ -116,7 +116,7 @@ public final class FauxPas {
 
     static final class Sneakily {
         @SuppressWarnings("Convert2Lambda") // we need @SneakyThrows on there
-        static final Function<Throwable, RuntimeException> INSTANCE =  new Function<Throwable, RuntimeException>() {
+        static final Function<Throwable, RuntimeException> INSTANCE = new Function<Throwable, RuntimeException>() {
             @Override
             @SneakyThrows
             public RuntimeException apply(final Throwable throwable) {
