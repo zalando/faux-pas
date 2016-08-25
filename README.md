@@ -18,8 +18,7 @@ Describe the problem(s) this project solves.
 Describe how this software can improve the lives of its audience.
 
 - **Technology stack**: Java 8+, functional interfaces
-- **Status**:  Alpha, Beta, 1.1, etc. It's OK to write a sentence, too. The goal is to let interested people know where this project is at.
-- Describe what sets this apart from related-projects. Linking to another doc or page is OK if this can't be expressed in a sentence or two.
+- **Status**:  0.x, currently being ported from [Riptide](https://www.github.com/zalando/riptide)
 
 ## Example
 
@@ -61,6 +60,8 @@ Add the following dependency to your project:
 
 ### Throwing functional interfaces
 
+*Faux Pas* has a variant of every major functional interface from the Java core:
+
  - [`ThrowingRunnable`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingRunnable.java)
  - [`ThrowingSupplier`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingSupplier.java)
  - [`ThrowingConsumer`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingConsumer.java)
@@ -70,12 +71,36 @@ Add the following dependency to your project:
  - [`ThrowingBiFunction`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiFunction.java)
  - [`ThrowingBiPredicate`](blob/master/src/main/java/org/zalando/fauxpas/ThrowingBiPredicate.java)
 
-- each one extends their official counterpart
+The followings statements apply to each of them:
+- extends the official interface, i.e. they are 100% compatible
 - defaults to [*sneakily throwing*](https://projectlombok.org/features/SneakyThrows.html) the original exception
+- has a conversion method `with(Strategy)` to flexibly override the error handling, see [Strategies](#strategies) for details
+
+### Syntactic Sugar
+
+The way the Java runtime implemented functional interfaces always requires additional type information, either by
+using a cast or a local variable:
+
+```java
+client::read.with(unchecked()) // compiler error
+((ThrowingFunction<String, User, IOException>) client::read).with(unchecked()) // too verbose
+
+ThrowingFunction<String, User, IOException> readUser = client::read; // local variable not always desired
+readUser.with(unchecked())
+```
+
+As a workaround there is a static *factory* method for every interface type in`FauxPas`. All of them are called
+`throwingRunnable`, `throwingSupplier` and so forth. It allows for concise one-line statements:
+
+```java
+throwingFunction(client:.read).with(unchecked())
+```
 
 ### Strategies
 
-- TODO `with(Strategy)` performs transformation: `Throwing*` ➙ `*`
+Every functional interface type that is defined in *Faux Pas* comes with a conversion method `with(Strategy)` that
+basically performs the transformation from `Throwing*` ➙ `*` while customizing the error handling strategy. There are
+two strategies available by default:
 
 #### Logging
 
