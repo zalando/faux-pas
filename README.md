@@ -114,15 +114,18 @@ The `FauxPas.rethrow()` strategy handles any raised exception by either rethrowi
 `RuntimeException`. It allows to customize the whole transformation process or only the fallback part:
 
 ```java
-function.with(rethrow(myHandling)) // completely defines exception transformation
+// completely defines exception transformation
+function.with(rethrow(myHandling))
 ```
 
 ```java
-function.with(rethrow(checked(myFallback))) // only transform unmapped exceptions
+// only transform unmapped exceptions
+function.with(rethrow(checked(myFallback)))
 ```
 
 ```java
-function.with(rethrow(sneakily())) // uses Lombok's @SneakyThrows to re-throw checked exceptions without declaring it
+// uses Lombok's @SneakyThrows to re-throw checked exceptions without declaring it
+function.with(rethrow(sneakily()))
 ```
 
 ### Try-with-resources alternative
