@@ -109,7 +109,7 @@ back to default values, i.e. `null` or `false` depending on the interface.
 #### Rethrow
 
 The `FauxPas.rethrow()` strategy handles any raised exception by either rethrowing them directly, e.g. `Error` and
-`RuntimeException` or by wrapping them meaningful unchecked exceptions, e.g. `UncheckedIOException` or
+`RuntimeException` or by wrapping them in meaningful unchecked exceptions, e.g. `UncheckedIOException` or
 `RuntimeException`. It allows to customize the whole transformation process or only the fallback part:
 
 ```java
