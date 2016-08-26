@@ -77,9 +77,15 @@ The way the Java runtime implemented functional interfaces always requires addit
 using a cast or a local variable:
 
 ```java
-client::read.with(unchecked()) // compiler error
-((ThrowingFunction<String, User, IOException>) client::read).with(unchecked()) // too verbose
-ThrowingFunction<String, User, IOException> readUser = client::read; // local variable not always desired
+// compiler error
+client::read.apply(name);
+
+// too verbose
+((ThrowingFunction<String, User, IOException>) client::read).apply(name);
+
+// local variable may not always be desired
+ThrowingFunction<String, User, IOException> readUser = client::read;
+readUser.apply(name);
 ```
 
 As a workaround there is a static *factory* method for every interface type in`FauxPas`. All of them are called
