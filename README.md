@@ -22,9 +22,9 @@ interface Client {
     User read(final String name) throws IOException;
 }
 
-ThrowingFunction<String, User, IOException> readUser = client::read;
+Function<String, User> readUser = throwingFunction(client::read);
 
-readUser.apply("Bob"); // may throw IOException
+readUser.apply("Bob"); // may throw IOException directly
 readUser.with(unchecked()).apply("Bob") // may throw UncheckedIOException
 ```
 
