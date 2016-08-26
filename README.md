@@ -79,7 +79,6 @@ using a cast or a local variable:
 ```java
 client::read.with(unchecked()) // compiler error
 ((ThrowingFunction<String, User, IOException>) client::read).with(unchecked()) // too verbose
-
 ThrowingFunction<String, User, IOException> readUser = client::read; // local variable not always desired
 ```
 
@@ -87,7 +86,9 @@ As a workaround there is a static *factory* method for every interface type in`F
 `throwingRunnable`, `throwingSupplier` and so forth. It allows for concise one-line statements:
 
 ```java
-throwingFunction(client::read).with(unchecked())
+List<User> users = names.stream()
+    .map(throwingFunction(client::read))
+    .collect(toList());
 ```
 
 ### Strategies
