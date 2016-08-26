@@ -10,12 +10,7 @@
 
 > **Faux pas** (fō pä′), noun: a slip or blunder in etiquette, manners, or conduct; an embarrassing social blunder or indiscretion.
 
-_**F**aux  **P**as_ is library that simplifies error handling for **F**unctional **P**rogramming in Java.
-
-Put a meaningful, short, plain-language description of what
-this project is trying to accomplish and why it matters.
-Describe the problem(s) this project solves.
-Describe how this software can improve the lives of its audience.
+_**F**aux  **P**as_ is library that simplifies error handling for **F**unctional **P**rogramming in Java. It fixes the issue that none of the functional interfaces in the Java Runtime by default is allowed to throw checked exceptions.
 
 - **Technology stack**: Java 8+, functional interfaces
 - **Status**:  0.x, currently being ported from [Riptide](https://www.github.com/zalando/riptide)
