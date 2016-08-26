@@ -1,9 +1,21 @@
 package org.zalando.fauxpas.io;
 
+import lombok.SneakyThrows;
+import org.zalando.fauxpas.ThrowingBiConsumer;
+import org.zalando.fauxpas.ThrowingBiFunction;
 import org.zalando.fauxpas.ThrowingConsumer;
 import org.zalando.fauxpas.ThrowingFunction;
 
 public interface TryWith {
+
+    static <O extends AutoCloseable, I extends AutoCloseable, X extends Throwable> void tryWith(final O outer,
+            final I inner, final ThrowingBiConsumer<O, I, X> consumer) throws X {
+        tryWith(outer, (ಠ_ಠ) -> {
+            tryWith(inner, (ツ) -> {
+                consumer.tryAccept(outer, inner);
+            });
+        });
+    }
 
     static <R extends AutoCloseable, X extends Throwable> void tryWith(final R resource,
             final ThrowingConsumer<R, X> consumer) throws X {
@@ -14,6 +26,17 @@ public interface TryWith {
         }
 
         tryClose(resource);
+    }
+
+    static <O extends AutoCloseable, I extends AutoCloseable, T, X extends Throwable> T tryWith(final O outer,
+            final I inner, final ThrowingBiFunction<O, I, T, X> function) throws X {
+
+        // not exactly sure why those explicit type parameters are needed
+        return TryWith.<O, T, X>tryWith(outer, (ಠ_ಠ) -> {
+            return tryWith(inner, (ツ) -> {
+                return function.tryApply(outer, inner);
+            });
+        });
     }
 
     static <R extends AutoCloseable, T, X extends Throwable> T tryWith(final R resource,
@@ -32,13 +55,9 @@ public interface TryWith {
         return value;
     }
 
-    static <X extends Throwable> void tryClose(final AutoCloseable resource) throws X {
-        try {
-            resource.close();
-        } catch (final Exception e) {
-            // TODO it's actually unsafe, because AutoCloseable could throw anything
-            throw TryWith.<X>cast(e);
-        }
+    @SneakyThrows
+    static void tryClose(final AutoCloseable resource) {
+        resource.close();
     }
 
     static <X extends Throwable> X tryClose(final AutoCloseable closeable, final X e) {
