@@ -62,6 +62,11 @@ public final class TryWith {
         resource.close();
     }
 
+    @SuppressWarnings("unchecked")
+    private static <X extends Throwable> X cast(final Throwable e) {
+        return (X) e;
+    }
+
     private static <X extends Throwable> X tryClose(final AutoCloseable closeable, final X e) {
         try {
             closeable.close();
@@ -70,11 +75,6 @@ public final class TryWith {
         }
 
         return e;
-    }
-
-    @SuppressWarnings("unchecked")
-    static <X extends Throwable> X cast(final Throwable e) {
-        return (X) e;
     }
 
 }
