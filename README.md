@@ -139,7 +139,7 @@ throwingFunction(client::read, rethrow(unchecked(throwable -> {
 
 ```java
 // uses Lombok's @SneakyThrows to re-throw checked exceptions without declaring it
-throwingFunction(client::read, rethrow(sneakily())) // virtually identical to throwingFunction(client::read)
+throwingFunction(client::read, rethrow(unchecked(sneakily())))
 ```
 
 ### Try-with-resources alternative
