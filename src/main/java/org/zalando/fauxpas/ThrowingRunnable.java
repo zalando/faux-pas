@@ -13,8 +13,4 @@ public interface ThrowingRunnable<X extends Throwable> extends Runnable {
         tryRun();
     }
 
-    default Runnable with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

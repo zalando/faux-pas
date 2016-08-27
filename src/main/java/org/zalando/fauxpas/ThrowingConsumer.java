@@ -16,8 +16,4 @@ public interface ThrowingConsumer<T, X extends Throwable> extends Consumer<T> {
         tryAccept(t);
     }
 
-    default Consumer<T> with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

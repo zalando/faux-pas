@@ -7,7 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public final class FauxPas {
 
@@ -15,64 +21,96 @@ public final class FauxPas {
         // package private so we can trick code coverage
     }
 
-    @SyntacticSugar
     public static <X extends Throwable> ThrowingRunnable<X> throwingRunnable(
             final ThrowingRunnable<X> runnable) {
         return runnable;
     }
 
-    @SyntacticSugar
+    public static <X extends Throwable> Runnable throwingRunnable(
+            final ThrowingRunnable<X> runnable, final Strategy strategy) {
+        return strategy.adapt(runnable);
+    }
+
     public static <T, X extends Throwable> ThrowingSupplier<T, X> throwingSupplier(
             final ThrowingSupplier<T, X> supplier) {
         return supplier;
     }
 
-    @SyntacticSugar
+    public static <T, X extends Throwable> Supplier<T> throwingSupplier(
+            final ThrowingSupplier<T, X> supplier, final Strategy strategy) {
+        return strategy.adapt(supplier);
+    }
+
     public static <T, X extends Throwable> ThrowingConsumer<T, X> throwingConsumer(
             final ThrowingConsumer<T, X> consumer) {
         return consumer;
     }
 
-    @SyntacticSugar
+    public static <T, X extends Throwable> Consumer<T> throwingConsumer(
+            final ThrowingConsumer<T, X> consumer, final Strategy strategy) {
+        return strategy.adapt(consumer);
+    }
+
     public static <T, R, X extends Throwable> ThrowingFunction<T, R, X> throwingFunction(
             final ThrowingFunction<T, R, X> function) {
         return function;
     }
 
-    @SyntacticSugar
+    public static <T, R, X extends Throwable> Function<T, R> throwingFunction(
+            final ThrowingFunction<T, R, X> function, final Strategy strategy) {
+        return strategy.adapt(function);
+    }
+
     public static <T, X extends Throwable> ThrowingPredicate<T, X> throwingPredicate(
             final ThrowingPredicate<T, X> predicate) {
         return predicate;
     }
 
-    @SyntacticSugar
+    public static <T, X extends Throwable> Predicate<T> throwingPredicate(
+            final ThrowingPredicate<T, X> predicate, final Strategy strategy) {
+        return strategy.adapt(predicate);
+    }
+
     public static <T, R, X extends Throwable> ThrowingBiConsumer<T, R, X> throwingBiConsumer(
             final ThrowingBiConsumer<T, R, X> consumer) {
         return consumer;
     }
 
-    @SyntacticSugar
+    public static <T, R, X extends Throwable> BiConsumer<T, R> throwingBiConsumer(
+            final ThrowingBiConsumer<T, R, X> consumer, final Strategy strategy) {
+        return strategy.adapt(consumer);
+    }
+
     public static <T, U, R, X extends Throwable> ThrowingBiFunction<T, U, R, X> throwingBiFunction(
             final ThrowingBiFunction<T, U, R, X> function) {
         return function;
     }
 
-    @SyntacticSugar
+    public static <T, U, R, X extends Throwable> BiFunction<T, U, R> throwingBiFunction(
+            final ThrowingBiFunction<T, U, R, X> function, final Strategy strategy) {
+        return strategy.adapt(function);
+    }
+
     public static <T, U, X extends Throwable> ThrowingBiPredicate<T, U, X> throwingBiPredicate(
             final ThrowingBiPredicate<T, U, X> predicate) {
         return predicate;
     }
 
-    public static Strategy logging() {
-        return DefaultLogging.INSTANCE;
+    public static <T, U, X extends Throwable> BiPredicate<T, U> throwingBiPredicate(
+            final ThrowingBiPredicate<T, U, X> predicate, final Strategy strategy) {
+        return strategy.adapt(predicate);
     }
 
-    static final class DefaultLogging {
-        static final Strategy INSTANCE = logging(LoggerFactory.getLogger(LoggingStrategy.class));
+    public static Strategy loggingAnd(final Strategy strategy) {
+        return loggingAnd(LoggerFactory.getLogger(LoggingStrategy.class), strategy);
     }
 
-    public static Strategy logging(final Logger logger) {
-        return new LoggingStrategy(logger);
+    public static Strategy loggingAnd(final Logger logger, final Strategy strategy) {
+        return new LoggingStrategy(logger, strategy);
+    }
+
+    public static Strategy ignore() {
+        return IgnoreStrategy.INSTANCE;
     }
 
     public static Strategy rethrow() {
@@ -80,7 +118,7 @@ public final class FauxPas {
     }
 
     static final class DefaultRethrow {
-        static final Strategy INSTANCE = rethrow(unchecked());
+        private static final Strategy INSTANCE = rethrow(unchecked());
     }
 
     // TODO document that the return value is not required, implementations are free to throw directly
@@ -116,7 +154,7 @@ public final class FauxPas {
 
     static final class Sneakily {
         @SuppressWarnings("Convert2Lambda") // we need @SneakyThrows on there
-        static final Function<Throwable, RuntimeException> INSTANCE = new Function<Throwable, RuntimeException>() {
+        private static final Function<Throwable, RuntimeException> INSTANCE = new Function<Throwable, RuntimeException>() {
             @Override
             @SneakyThrows
             public RuntimeException apply(final Throwable throwable) {
