@@ -1,15 +1,16 @@
-package org.zalando.fauxpas.io;
+package org.zalando.fauxpas;
 
 import lombok.SneakyThrows;
-import org.zalando.fauxpas.ThrowingBiConsumer;
-import org.zalando.fauxpas.ThrowingBiFunction;
-import org.zalando.fauxpas.ThrowingConsumer;
-import org.zalando.fauxpas.ThrowingFunction;
 
-public interface TryWith {
+public final class TryWith {
 
-    static <O extends AutoCloseable, I extends AutoCloseable, X extends Throwable> void tryWith(final O outer,
+    TryWith() {
+        // package private so we can trick code coverage
+    }
+
+    public static <O extends AutoCloseable, I extends AutoCloseable, X extends Throwable> void tryWith(final O outer,
             final I inner, final ThrowingBiConsumer<O, I, X> consumer) throws X {
+
         tryWith(outer, (ಠ_ಠ) -> {
             tryWith(inner, (ツ) -> {
                 consumer.tryAccept(outer, inner);
@@ -17,18 +18,19 @@ public interface TryWith {
         });
     }
 
-    static <R extends AutoCloseable, X extends Throwable> void tryWith(final R resource,
+    public static <R extends AutoCloseable, X extends Throwable> void tryWith(final R resource,
             final ThrowingConsumer<R, X> consumer) throws X {
+
         try {
             consumer.tryAccept(resource);
         } catch (final Throwable e) {
-            throw tryClose(resource, TryWith.<X>cast(e));
+            throw tryClose(resource, e);
         }
 
         tryClose(resource);
     }
 
-    static <O extends AutoCloseable, I extends AutoCloseable, T, X extends Throwable> T tryWith(final O outer,
+    public static <O extends AutoCloseable, I extends AutoCloseable, T, X extends Throwable> T tryWith(final O outer,
             final I inner, final ThrowingBiFunction<O, I, T, X> function) throws X {
 
         // not exactly sure why those explicit type parameters are needed
@@ -39,7 +41,7 @@ public interface TryWith {
         });
     }
 
-    static <R extends AutoCloseable, T, X extends Throwable> T tryWith(final R resource,
+    public static <R extends AutoCloseable, T, X extends Throwable> T tryWith(final R resource,
             final ThrowingFunction<R, T, X> supplier) throws X {
 
         final T value;
@@ -47,7 +49,7 @@ public interface TryWith {
         try {
             value = supplier.tryApply(resource);
         } catch (final Exception e) {
-            throw tryClose(resource, TryWith.<X>cast(e));
+            throw tryClose(resource, e);
         }
 
         tryClose(resource);
@@ -56,23 +58,19 @@ public interface TryWith {
     }
 
     @SneakyThrows
-    static void tryClose(final AutoCloseable resource) {
+    private static void tryClose(final AutoCloseable resource) {
         resource.close();
     }
 
-    static <X extends Throwable> X tryClose(final AutoCloseable closeable, final X e) {
+    @SneakyThrows
+    private static RuntimeException tryClose(final AutoCloseable closeable, final Throwable e) {
         try {
             closeable.close();
         } catch (final Exception inner) {
             e.addSuppressed(inner);
         }
 
-        return e;
-    }
-
-    @SuppressWarnings("unchecked")
-    static <X extends Throwable> X cast(final Throwable e) {
-        return (X) e;
+        throw e;
     }
 
 }

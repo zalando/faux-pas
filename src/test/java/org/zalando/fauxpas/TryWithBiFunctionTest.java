@@ -1,4 +1,4 @@
-package org.zalando.fauxpas.io;
+package org.zalando.fauxpas;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.zalando.fauxpas.io.TryWith.tryWith;
+import static org.zalando.fauxpas.TryWith.tryWith;
 
 @RunWith(JUnitPlatform.class)
 public final class TryWithBiFunctionTest {
