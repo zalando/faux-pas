@@ -12,23 +12,28 @@ import org.junit.runner.RunWith;
 public final class EnforceCoverageTest {
 
     @Test
-    public void shouldUseFauxPasConstructors() {
+    public void shouldUseFauxPasConstructor() {
         new FauxPas();
     }
 
     @Test
-    public void shouldUseDefaultLoggingConstructors() {
+    public void shouldUseDefaultLoggingConstructor() {
         new FauxPas.DefaultLogging();
     }
 
     @Test
-    public void shouldUseDefaultRethrowConstructors() {
+    public void shouldUseDefaultRethrowConstructor() {
         new FauxPas.DefaultRethrow();
     }
 
     @Test
-    public void shouldUseSneakilyConstructors() {
+    public void shouldUseSneakilyConstructor() {
         new FauxPas.Sneakily();
+    }
+
+    @Test
+    public void shouldUseTryWithConstructor() {
+        new TryWith();
     }
 
 }

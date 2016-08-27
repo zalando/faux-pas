@@ -24,7 +24,7 @@ public final class TryWith {
         try {
             consumer.tryAccept(resource);
         } catch (final Throwable e) {
-            throw tryClose(resource, e);
+            throw tryClose(resource, TryWith.<X>cast(e));
         }
 
         tryClose(resource);
@@ -48,8 +48,8 @@ public final class TryWith {
 
         try {
             value = supplier.tryApply(resource);
-        } catch (final Exception e) {
-            throw tryClose(resource, e);
+        } catch (final Throwable e) {
+            throw tryClose(resource, TryWith.<X>cast(e));
         }
 
         tryClose(resource);
@@ -62,15 +62,19 @@ public final class TryWith {
         resource.close();
     }
 
-    @SneakyThrows
-    private static RuntimeException tryClose(final AutoCloseable closeable, final Throwable e) {
+    private static <X extends Throwable> X tryClose(final AutoCloseable closeable, final X e) {
         try {
             closeable.close();
-        } catch (final Exception inner) {
+        } catch (final Throwable inner) {
             e.addSuppressed(inner);
         }
 
-        throw e;
+        return e;
+    }
+
+    @SuppressWarnings("unchecked")
+    static <X extends Throwable> X cast(final Throwable e) {
+        return (X) e;
     }
 
 }
