@@ -2,14 +2,17 @@ package org.zalando.fauxpas;
 
 import lombok.SneakyThrows;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+
 public final class TryWith {
 
     TryWith() {
         // package private so we can trick code coverage
     }
 
-    public static <O extends AutoCloseable, I extends AutoCloseable, X extends Throwable> void tryWith(final O outer,
-            final I inner, final ThrowingBiConsumer<O, I, X> consumer) throws X {
+    public static <O extends AutoCloseable, I extends AutoCloseable, X extends Throwable> void tryWith(
+            @Nullable final O outer, @Nullable final I inner, final ThrowingBiConsumer<O, I, X> consumer) throws X {
 
         tryWith(outer, (ಠ_ಠ) -> {
             tryWith(inner, (ツ) -> {
@@ -18,7 +21,7 @@ public final class TryWith {
         });
     }
 
-    public static <R extends AutoCloseable, X extends Throwable> void tryWith(final R resource,
+    public static <R extends AutoCloseable, X extends Throwable> void tryWith(@Nullable final R resource,
             final ThrowingConsumer<R, X> consumer) throws X {
 
         try {
@@ -30,8 +33,8 @@ public final class TryWith {
         tryClose(resource);
     }
 
-    public static <O extends AutoCloseable, I extends AutoCloseable, T, X extends Throwable> T tryWith(final O outer,
-            final I inner, final ThrowingBiFunction<O, I, T, X> function) throws X {
+    public static <O extends AutoCloseable, I extends AutoCloseable, T, X extends Throwable> T tryWith(
+            @Nullable final O outer, @Nullable final I inner, final ThrowingBiFunction<O, I, T, X> function) throws X {
 
         // not exactly sure why those explicit type parameters are needed
         return TryWith.<O, T, X>tryWith(outer, (ಠ_ಠ) -> {
@@ -41,7 +44,7 @@ public final class TryWith {
         });
     }
 
-    public static <R extends AutoCloseable, T, X extends Throwable> T tryWith(final R resource,
+    public static <R extends AutoCloseable, T, X extends Throwable> T tryWith(@Nullable final R resource,
             final ThrowingFunction<R, T, X> supplier) throws X {
 
         final T value;
@@ -58,7 +61,11 @@ public final class TryWith {
     }
 
     @SneakyThrows
-    private static void tryClose(final AutoCloseable resource) {
+    private static void tryClose(@Nullable final AutoCloseable resource) {
+        if (resource == null) {
+            return;
+        }
+
         resource.close();
     }
 
@@ -67,7 +74,11 @@ public final class TryWith {
         return (X) e;
     }
 
-    private static <X extends Throwable> X tryClose(final AutoCloseable closeable, final X e) {
+    private static <X extends Throwable> X tryClose(@Nullable final AutoCloseable closeable, final X e) {
+        if (closeable == null) {
+            return e;
+        }
+
         try {
             closeable.close();
         } catch (final Throwable inner) {

@@ -50,6 +50,18 @@ public final class TryWithFunctionTest {
     }
 
     @Test
+    public void shouldNotFailOnNullResource() throws Exception {
+        tryWith(null, function);
+        verify(function).tryApply(null);
+    }
+
+    @Test
+    public void shouldNotFailOnNullResourceWithException() throws Exception {
+        doThrow(new Exception()).when(function).tryApply(any());
+        expectThrows(Exception.class, () -> tryWith(null, function));
+    }
+
+    @Test
     public void shouldThrowException() throws Exception {
         final Exception exception = new Exception();
         doThrow(exception).when(function).tryApply(any());

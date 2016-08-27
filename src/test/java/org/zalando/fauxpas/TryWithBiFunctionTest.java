@@ -47,6 +47,18 @@ public final class TryWithBiFunctionTest {
     }
 
     @Test
+    public void shouldNotFailOnNullResource() throws Exception {
+        tryWith(null, null, function);
+        verify(function).tryApply(null, null);
+    }
+
+    @Test
+    public void shouldNotFailOnNullResourceWithException() throws Exception {
+        doThrow(new Exception()).when(function).tryApply(any(), any());
+        expectThrows(Exception.class, () -> tryWith(null, null, function));
+    }
+
+    @Test
     public void shouldCloseWithoutException() throws Exception {
         run();
         verify(inner).close();

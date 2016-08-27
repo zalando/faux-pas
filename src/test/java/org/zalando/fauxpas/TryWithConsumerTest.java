@@ -39,6 +39,18 @@ public final class TryWithConsumerTest {
     }
 
     @Test
+    public void shouldNotFailOnNullResource() throws Exception {
+        tryWith(null, consumer);
+        verify(consumer).tryAccept(null);
+    }
+
+    @Test
+    public void shouldNotFailOnNullResourceWithException() throws Exception {
+        doThrow(new Exception()).when(consumer).tryAccept(any());
+        expectThrows(Exception.class, () -> tryWith(null, consumer));
+    }
+
+    @Test
     public void shouldThrowException() throws Exception {
         final Exception exception = new Exception();
         doThrow(exception).when(consumer).tryAccept(any());
