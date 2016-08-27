@@ -16,8 +16,4 @@ public interface ThrowingBiConsumer<T, U, X extends Throwable> extends BiConsume
         tryAccept(t, u);
     }
 
-    default BiConsumer<T, U> with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

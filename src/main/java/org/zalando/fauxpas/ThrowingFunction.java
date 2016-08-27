@@ -16,8 +16,4 @@ public interface ThrowingFunction<T, R, X extends Throwable> extends Function<T,
         return tryApply(t);
     }
 
-    default Function<T, R> with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

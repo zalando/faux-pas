@@ -16,8 +16,4 @@ public interface ThrowingBiFunction<T, U, R, X extends Throwable> extends BiFunc
         return tryApply(t, u);
     }
 
-    default BiFunction<T, U, R> with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

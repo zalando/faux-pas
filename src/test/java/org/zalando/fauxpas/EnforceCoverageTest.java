@@ -17,11 +17,6 @@ public final class EnforceCoverageTest {
     }
 
     @Test
-    public void shouldUseDefaultLoggingConstructor() {
-        new FauxPas.DefaultLogging();
-    }
-
-    @Test
     public void shouldUseDefaultRethrowConstructor() {
         new FauxPas.DefaultRethrow();
     }

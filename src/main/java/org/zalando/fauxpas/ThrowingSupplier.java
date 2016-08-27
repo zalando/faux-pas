@@ -15,8 +15,4 @@ public interface ThrowingSupplier<T, X extends Throwable> extends Supplier<T> {
         return tryGet();
     }
 
-    default Supplier<T> with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

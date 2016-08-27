@@ -16,8 +16,4 @@ public interface ThrowingBiPredicate<T, U, X extends Throwable> extends BiPredic
         return tryTest(t, u);
     }
 
-    default BiPredicate<T, U> with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

@@ -10,7 +10,8 @@
 
 > **Faux pas** (fō pä′), noun: a slip or blunder in etiquette, manners, or conduct; an embarrassing social blunder or indiscretion.
 
-_**F**aux  **P**as_ is library that simplifies error handling for **F**unctional **P**rogramming in Java. It fixes the issue that none of the functional interfaces in the Java Runtime by default is allowed to throw checked exceptions.
+_**F**aux  **P**as_ is library that simplifies error handling for **F**unctional **P**rogramming in Java. It fixes the
+issue that none of the functional interfaces in the Java Runtime by default is allowed to throw checked exceptions.
 
 - **Technology stack**: Java 8+, functional interfaces
 - **Status**:  0.x, currently being ported from [Riptide](https://www.github.com/zalando/riptide)
@@ -23,9 +24,10 @@ interface Client {
 }
 
 Function<String, User> readUser = throwingFunction(client::read);
-
 readUser.apply("Bob"); // may throw IOException directly
-readUser.with(unchecked()).apply("Bob") // may throw UncheckedIOException
+
+Function<String, User> readUser = throwingFunction(client::read, rethrow(unchecked()));
+readUser.apply("Bob"); // may throw UncheckedIOException
 ```
 
 ## Features
@@ -69,9 +71,8 @@ Add the following dependency to your project:
 The followings statements apply to each of them:
 - extends the official interface, i.e. they are 100% compatible
 - defaults to [*sneakily throwing*](https://projectlombok.org/features/SneakyThrows.html) the original exception
-- has a conversion method `with(Strategy)` to flexibly override the error handling, see [Strategies](#strategies) for details
 
-### Syntactic Sugar
+### Creation
 
 The way the Java runtime implemented functional interfaces always requires additional type information, either by
 using a cast or a local variable:
@@ -99,14 +100,22 @@ List<User> users = names.stream()
 
 ### Strategies
 
-Every functional interface type that is defined in *Faux Pas* comes with a conversion method `with(Strategy)` that
+Every factory method `FauxPas.throwing*(..)` can optionally be used with a `Strategy`, a pluggable mechanism that
 basically performs the transformation from `Throwing*` ➙ `*` while customizing the error handling strategy. There are
-two strategies available by default:
+three strategies available by default:
 
 #### Logging
 
-The `FauxPas.logging()` strategy handles any raised exception by logging them to a customizable logger and falling
-back to default values, i.e. `null` or `false` depending on the interface.
+The `FauxPas.loggingAnd(..)` strategy handles any raised exception by logging them to a customizable logger and falling
+back to another strategy, e.g. one of the remaining:
+
+```java
+throwingFunction(client::read, loggingAnd(rethrow(sneakily())))
+```
+
+#### Ignore
+
+The `FauxPas.ignore()` strategy handles any raised exception by ignoring them completely.
 
 #### Rethrow
 
@@ -116,17 +125,21 @@ The `FauxPas.rethrow()` strategy handles any raised exception by either rethrowi
 
 ```java
 // completely defines exception transformation
-function.with(rethrow(myHandling))
+throwingFunction(client::read, rethrow(throwable -> {
+    // transform here
+}))
 ```
 
 ```java
 // only transform unmapped exceptions
-function.with(rethrow(checked(myFallback)))
+throwingFunction(client::read, rethrow(unchecked(throwable -> {
+    // transform everything that is neither Error nor RuntimeException
+})))
 ```
 
 ```java
 // uses Lombok's @SneakyThrows to re-throw checked exceptions without declaring it
-function.with(rethrow(sneakily()))
+throwingFunction(client::read, rethrow(sneakily())) // virtually identical to throwingFunction(client::read)
 ```
 
 ### Try-with-resources alternative

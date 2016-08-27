@@ -16,8 +16,4 @@ public interface ThrowingPredicate<T, X extends Throwable> extends Predicate<T> 
         return tryTest(t);
     }
 
-    default Predicate<T> with(final Strategy strategy) {
-        return strategy.adapt(this);
-    }
-
 }

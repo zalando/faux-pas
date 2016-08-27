@@ -3,7 +3,6 @@ package org.zalando.fauxpas;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.zalando.fauxpas.ThrowingFunction;
 
 import java.io.Closeable;
 import java.io.IOException;
