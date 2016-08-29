@@ -2,10 +2,10 @@
 
 [![Spilled coffee](docs/spilled-coffee.jpg)](https://pixabay.com/en/mistake-spill-slip-up-accident-876597/)
 
-[![Build Status](https://img.shields.io/travis/zalando-incubator/faux-pas.svg)](https://travis-ci.org/zalando-incubator/faux-pas)
-[![Coverage Status](https://img.shields.io/coveralls/zalando-incubator/faux-pas.svg)](https://coveralls.io/r/zalando-incubator/faux-pas)
+[![Build Status](https://img.shields.io/travis/zalando/faux-pas.svg)](https://travis-ci.org/zalando/faux-pas)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/faux-pas.svg)](https://coveralls.io/r/zalando/faux-pas)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.zalando/faux-pas/badge.svg)](http://www.javadoc.io/doc/org.zalando/faux-pas)
-[![Release](https://img.shields.io/github/release/zalando-incubator/faux-pas.svg)](https://github.com/zalando-incubator/faux-pas/releases)
+[![Release](https://img.shields.io/github/release/zalando/faux-pas.svg)](https://github.com/zalando/faux-pas/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/faux-pas.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/faux-pas)
 
 > **Faux pas** (fō pä′), noun: a slip or blunder in etiquette, manners, or conduct; an embarrassing social blunder or indiscretion.
