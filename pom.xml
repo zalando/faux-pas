@@ -14,7 +14,7 @@
 
     <name>Faux Pas</name>
     <description>Error handling in Functional Programming</description>
-    <url>https://github.com/zalando-incubator/faux-pas</url>
+    <url>https://github.com/zalando/faux-pas</url>
 
     <organization>
         <name>Zalando SE</name>
@@ -46,9 +46,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/zalando-incubator/faux-pas</url>
-        <connection>scm:git:git@github.com:zalando-incubator/faux-pas.git</connection>
-        <developerConnection>scm:git:git@github.com:zalando-incubator/faux-pas.git</developerConnection>
+        <url>https://github.com/zalando/faux-pas</url>
+        <connection>scm:git:git@github.com:zalando/faux-pas.git</connection>
+        <developerConnection>scm:git:git@github.com:zalando/faux-pas.git</developerConnection>
     </scm>
 
     <properties>
