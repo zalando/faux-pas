@@ -2,8 +2,8 @@
 
 [![Spilled coffee](docs/spilled-coffee.jpg)](https://pixabay.com/en/mistake-spill-slip-up-accident-876597/)
 
-[![Build Status](https://img.shields.io/travis/zalando/faux-pas.svg)](https://travis-ci.org/zalando/faux-pas)
-[![Coverage Status](https://img.shields.io/coveralls/zalando/faux-pas.svg)](https://coveralls.io/r/zalando/faux-pas)
+[![Build Status](https://img.shields.io/travis/zalando/faux-pas/master.svg)](https://travis-ci.org/zalando/faux-pas)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/faux-pas/master.svg)](https://coveralls.io/r/zalando/faux-pas)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.zalando/faux-pas/badge.svg)](http://www.javadoc.io/doc/org.zalando/faux-pas)
 [![Release](https://img.shields.io/github/release/zalando/faux-pas.svg)](https://github.com/zalando/faux-pas/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/faux-pas.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/faux-pas)
