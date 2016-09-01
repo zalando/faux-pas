@@ -138,7 +138,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.0.52-beta</version>
+            <version>2.1.0-beta.120</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -176,7 +176,7 @@
                 <version>3.5.1</version>
                 <configuration>
                     <compilerArgs>
-                        <compilerArg>-Xlint:unchecked</compilerArg>
+                        <compilerArg>-Xlint:unchecked,deprecation</compilerArg>
                         <compilerArg>-Werror</compilerArg>
                         <compilerArg>-parameters</compilerArg>
                     </compilerArgs>

@@ -10,9 +10,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.expectThrows;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -55,7 +55,7 @@ public final class LoggingStrategyTest extends StrategyTest {
     protected void testAdaptedWithException(final Throwable expected, final Executable executable) throws Throwable {
         final Exception actual = expectThrows(Exception.class, executable);
         assertThat(actual, is(sameInstance(expected)));
-        verify(logger).error(anyString(), anyObject(), same(expected));
+        verify(logger).error(anyString(), any(), same(expected));
     }
 
     @Override
