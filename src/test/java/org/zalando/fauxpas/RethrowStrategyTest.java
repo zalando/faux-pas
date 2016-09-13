@@ -50,14 +50,14 @@ public final class RethrowStrategyTest extends StrategyTest {
     }
 
     @Override
-    protected void testOriginalWithException(final Throwable expected, final Executable executable) throws Throwable {
+    protected void testOriginalWithException(final Throwable expected, final Executable executable) {
         final Exception actual = expectThrows(Exception.class, executable);
         assertThat(actual, is(sameInstance(expected)));
         verifyZeroInteractions(transformer);
     }
 
     @Override
-    protected void testAdaptedWithException(final Throwable expected, final Executable executable) throws Throwable {
+    protected void testAdaptedWithException(final Throwable expected, final Executable executable) {
         expectThrows(IllegalStateException.class, executable);
         verify(transformer).apply(same(expected));
     }

@@ -44,7 +44,7 @@ public final class LoggingStrategyTest extends StrategyTest {
     }
 
     @Override
-    protected void testOriginalWithException(final Throwable expected, final Executable executable) throws Throwable {
+    protected void testOriginalWithException(final Throwable expected, final Executable executable) {
         final Exception actual = expectThrows(Exception.class, executable);
         assertThat(actual, is(sameInstance(expected)));
         verifyZeroInteractions(logger);
@@ -52,7 +52,7 @@ public final class LoggingStrategyTest extends StrategyTest {
     }
 
     @Override
-    protected void testAdaptedWithException(final Throwable expected, final Executable executable) throws Throwable {
+    protected void testAdaptedWithException(final Throwable expected, final Executable executable) {
         final Exception actual = expectThrows(Exception.class, executable);
         assertThat(actual, is(sameInstance(expected)));
         verify(logger).error(anyString(), any(), same(expected));

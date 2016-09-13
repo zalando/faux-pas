@@ -5,10 +5,12 @@ import org.slf4j.Logger;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 final class LoggingStrategy implements Strategy {
 
@@ -65,6 +67,17 @@ final class LoggingStrategy implements Strategy {
     }
 
     @Override
+    public <T, X extends Throwable> UnaryOperator<T> adapt(final ThrowingUnaryOperator<T, X> function) {
+        return strategy.adapt((T t) -> {
+            try {
+                return function.tryApply(t);
+            } catch (final Throwable e) {
+                throw handle(function, e);
+            }
+        });
+    }
+
+    @Override
     public <T, X extends Throwable> Predicate<T> adapt(final ThrowingPredicate<T, X> predicate) {
         return strategy.adapt((T t) -> {
             try {
@@ -98,6 +111,17 @@ final class LoggingStrategy implements Strategy {
     }
 
     @Override
+    public <T, X extends Throwable> BinaryOperator<T> adapt(final ThrowingBinaryOperator<T, X> function) {
+        return strategy.adapt((T t, T u) -> {
+            try {
+                return function.tryApply(t, u);
+            } catch (final Throwable e) {
+                throw handle(function, e);
+            }
+        });
+    }
+
+    @Override
     public <T, U, X extends Throwable> BiPredicate<T, U> adapt(final ThrowingBiPredicate<T, U, X> predicate) {
         return strategy.adapt((T t, U u) -> {
             try {
@@ -108,7 +132,7 @@ final class LoggingStrategy implements Strategy {
         });
     }
 
-    private Throwable handle(final Object source, final Throwable throwable) throws Throwable {
+    private Throwable handle(final Object source, final Throwable throwable) {
         logger.error("Exception in {}", source, throwable);
         return throwable;
     }

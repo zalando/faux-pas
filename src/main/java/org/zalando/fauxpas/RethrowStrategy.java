@@ -3,10 +3,12 @@ package org.zalando.fauxpas;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 final class RethrowStrategy implements Strategy {
 
@@ -61,6 +63,17 @@ final class RethrowStrategy implements Strategy {
     }
 
     @Override
+    public <T, X extends Throwable> UnaryOperator<T> adapt(final ThrowingUnaryOperator<T, X> operator) {
+        return t -> {
+            try {
+                return operator.tryApply(t);
+            } catch (final Throwable e) {
+                throw handle(e);
+            }
+        };
+    }
+
+    @Override
     public <T, X extends Throwable> Predicate<T> adapt(final ThrowingPredicate<T, X> predicate) {
         return t -> {
             try {
@@ -87,6 +100,17 @@ final class RethrowStrategy implements Strategy {
         return (t, u) -> {
             try {
                 return function.tryApply(t, u);
+            } catch (final Throwable e) {
+                throw handle(e);
+            }
+        };
+    }
+
+    @Override
+    public <T, X extends Throwable> BinaryOperator<T> adapt(final ThrowingBinaryOperator<T, X> operator) {
+        return (t, u) -> {
+            try {
+                return operator.tryApply(t, u);
             } catch (final Throwable e) {
                 throw handle(e);
             }

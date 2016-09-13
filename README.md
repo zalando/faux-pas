@@ -64,9 +64,11 @@ Add the following dependency to your project:
  - [`ThrowingSupplier`](src/main/java/org/zalando/fauxpas/ThrowingSupplier.java)
  - [`ThrowingConsumer`](src/main/java/org/zalando/fauxpas/ThrowingConsumer.java)
  - [`ThrowingFunction`](src/main/java/org/zalando/fauxpas/ThrowingFunction.java)
+ - [`ThrowingUnaryOperator`](src/main/java/org/zalando/fauxpas/ThrowingUnaryOperator.java)
  - [`ThrowingPredicate`](src/main/java/org/zalando/fauxpas/ThrowingPredicate.java)
  - [`ThrowingBiConsumer`](src/main/java/org/zalando/fauxpas/ThrowingBiConsumer.java)
  - [`ThrowingBiFunction`](src/main/java/org/zalando/fauxpas/ThrowingBiFunction.java)
+ - [`ThrowingBinaryOperator`](src/main/java/org/zalando/fauxpas/ThrowingBinaryOperator.java)
  - [`ThrowingBiPredicate`](src/main/java/org/zalando/fauxpas/ThrowingBiPredicate.java)
 
 The followings statements apply to each of them:

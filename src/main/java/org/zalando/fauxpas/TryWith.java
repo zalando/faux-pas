@@ -3,7 +3,6 @@ package org.zalando.fauxpas;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public final class TryWith {
 

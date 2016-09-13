@@ -13,11 +13,13 @@ import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.zalando.fauxpas.FauxPas.throwingBiConsumer;
 import static org.zalando.fauxpas.FauxPas.throwingBiFunction;
 import static org.zalando.fauxpas.FauxPas.throwingBiPredicate;
+import static org.zalando.fauxpas.FauxPas.throwingBinaryOperator;
 import static org.zalando.fauxpas.FauxPas.throwingConsumer;
 import static org.zalando.fauxpas.FauxPas.throwingFunction;
 import static org.zalando.fauxpas.FauxPas.throwingPredicate;
 import static org.zalando.fauxpas.FauxPas.throwingRunnable;
 import static org.zalando.fauxpas.FauxPas.throwingSupplier;
+import static org.zalando.fauxpas.FauxPas.throwingUnaryOperator;
 
 /**
  * Tests the default implementation of e.g. {@link Function#apply(Object)} in {@link ThrowingFunction}.
@@ -74,30 +76,44 @@ public final class DefaultImplementationTest {
 
     @Test
     public void shouldRethrowExceptionFromFunction() {
-        final ThrowingFunction<Void, Void, Exception> consumer = throwingFunction($ -> {
+        final ThrowingFunction<Void, Void, Exception> function = throwingFunction($ -> {
             throw exception;
         });
-        shouldThrow(() -> consumer.apply(null));
+        shouldThrow(() -> function.apply(null));
     }
 
     @Test
     public void shouldNotRethrowExceptionFromFunction() throws Exception {
-        final ThrowingFunction<Void, Void, Exception> consumer = throwingFunction((Void $) -> null);
-        shouldNotThrow(() -> consumer.apply(null));
+        final ThrowingFunction<Void, Void, Exception> function = throwingFunction((Void $) -> null);
+        shouldNotThrow(() -> function.apply(null));
+    }
+
+    @Test
+    public void shouldRethrowExceptionFromUnaryOperator() {
+        final ThrowingUnaryOperator<Void, Exception> operator = throwingUnaryOperator($ -> {
+            throw exception;
+        });
+        shouldThrow(() -> operator.apply(null));
+    }
+
+    @Test
+    public void shouldNotRethrowExceptionFromUnaryOperator() throws Exception {
+        final ThrowingUnaryOperator<Void, Exception> operator = throwingUnaryOperator((Void $) -> null);
+        shouldNotThrow(() -> operator.apply(null));
     }
 
     @Test
     public void shouldRethrowExceptionFromPredicate() {
-        final ThrowingPredicate<Void, Exception> consumer = throwingPredicate($ -> {
+        final ThrowingPredicate<Void, Exception> predicate = throwingPredicate($ -> {
             throw exception;
         });
-        shouldThrow(() -> consumer.test(null));
+        shouldThrow(() -> predicate.test(null));
     }
 
     @Test
     public void shouldNotRethrowExceptionFromPredicate() throws Exception {
-        final ThrowingPredicate<Void, Exception> consumer = throwingPredicate((Void $) -> false);
-        shouldNotThrow(() -> consumer.test(null));
+        final ThrowingPredicate<Void, Exception> predicate = throwingPredicate((Void $) -> false);
+        shouldNotThrow(() -> predicate.test(null));
     }
 
     @Test
@@ -117,33 +133,47 @@ public final class DefaultImplementationTest {
 
     @Test
     public void shouldRethrowExceptionFromBiFunction() {
-        final ThrowingBiFunction<Void, Void, Void, Exception> consumer = throwingBiFunction(($, €) -> {
+        final ThrowingBiFunction<Void, Void, Void, Exception> function = throwingBiFunction(($, €) -> {
             throw exception;
         });
-        shouldThrow(() -> consumer.apply(null, null));
+        shouldThrow(() -> function.apply(null, null));
     }
 
     @Test
     public void shouldNotRethrowExceptionFromBiFunction() throws Exception {
-        final ThrowingBiFunction<Void, Void, Void, Exception> consumer = throwingBiFunction(($, €) -> null);
-        shouldNotThrow(() -> consumer.apply(null, null));
+        final ThrowingBiFunction<Void, Void, Void, Exception> function = throwingBiFunction(($, €) -> null);
+        shouldNotThrow(() -> function.apply(null, null));
+    }
+
+    @Test
+    public void shouldRethrowExceptionFromBinaryOperator() {
+        final ThrowingBinaryOperator<Void, Exception> operator = throwingBinaryOperator(($, €) -> {
+            throw exception;
+        });
+        shouldThrow(() -> operator.apply(null, null));
+    }
+
+    @Test
+    public void shouldNotRethrowExceptionFromBinaryOperator() throws Exception {
+        final ThrowingBinaryOperator<Void, Exception> operator = throwingBinaryOperator(($, €) -> null);
+        shouldNotThrow(() -> operator.apply(null, null));
     }
 
     @Test
     public void shouldRethrowExceptionFromBiPredicate() {
-        final ThrowingBiPredicate<Void, Void, Exception> consumer = throwingBiPredicate(($, €) -> {
+        final ThrowingBiPredicate<Void, Void, Exception> predicate = throwingBiPredicate(($, €) -> {
             throw exception;
         });
-        shouldThrow(() -> consumer.test(null, null));
+        shouldThrow(() -> predicate.test(null, null));
     }
 
     @Test
     public void shouldNotRethrowExceptionFromBiPredicate() throws Exception {
-        final ThrowingBiPredicate<Void, Void, Exception> consumer = throwingBiPredicate(($, €) -> false);
-        shouldNotThrow(() -> consumer.test(null, null));
+        final ThrowingBiPredicate<Void, Void, Exception> predicate = throwingBiPredicate(($, €) -> false);
+        shouldNotThrow(() -> predicate.test(null, null));
     }
 
-    private void shouldNotThrow(final Runnable nonThrower) throws Exception {
+    private void shouldNotThrow(final Runnable nonThrower) {
         nonThrower.run();
     }
 
