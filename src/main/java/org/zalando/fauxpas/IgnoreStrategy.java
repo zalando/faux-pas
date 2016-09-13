@@ -3,10 +3,12 @@ package org.zalando.fauxpas;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 enum IgnoreStrategy implements Strategy {
 
@@ -48,15 +50,23 @@ enum IgnoreStrategy implements Strategy {
 
     @Override
     public <T, R, X extends Throwable> Function<T, R> adapt(final ThrowingFunction<T, R, X> function) {
-        return t -> {
-            try {
-                return function.tryApply(t);
-            } catch (final Throwable e) {
-                ignore(e);
-                return null;
-            }
-        };
+        return t -> apply(function, t);
     }
+
+    @Override
+    public <T, X extends Throwable> UnaryOperator<T> adapt(final ThrowingUnaryOperator<T, X> operator) {
+        return t -> apply(operator::tryApply, t);
+    }
+
+    private  <T, R, X extends Throwable> R apply(final ThrowingFunction<T, R, X> function, final T t) {
+        try {
+            return function.tryApply(t);
+        } catch (final Throwable e) {
+            ignore(e);
+            return null;
+        }
+    }
+
 
     @Override
     public <T, X extends Throwable> Predicate<T> adapt(final ThrowingPredicate<T, X> predicate) {
@@ -83,14 +93,21 @@ enum IgnoreStrategy implements Strategy {
 
     @Override
     public <T, U, R, X extends Throwable> BiFunction<T, U, R> adapt(final ThrowingBiFunction<T, U, R, X> function) {
-        return (t, u) -> {
-            try {
-                return function.tryApply(t, u);
-            } catch (final Throwable e) {
-                ignore(e);
-                return null;
-            }
-        };
+        return (t, u) -> apply(function, t, u);
+    }
+
+    @Override
+    public <T, X extends Throwable> BinaryOperator<T> adapt(final ThrowingBinaryOperator<T,X> function) {
+        return (t, u) -> apply(function::tryApply, t, u);
+    }
+
+    private  <T, U, R, X extends Throwable> R apply(final ThrowingBiFunction<T, U, R, X> function, final T t, final U u) {
+        try {
+            return function.tryApply(t, u);
+        } catch (final Throwable e) {
+            ignore(e);
+            return null;
+        }
     }
 
     @Override

@@ -10,10 +10,12 @@ import java.io.UncheckedIOException;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public final class FauxPas {
 
@@ -61,6 +63,16 @@ public final class FauxPas {
         return strategy.adapt(function);
     }
 
+    public static <T, X extends Throwable> ThrowingUnaryOperator<T, X> throwingUnaryOperator(
+            final ThrowingUnaryOperator<T, X> operator) {
+        return operator;
+    }
+
+    public static <T, X extends Throwable> UnaryOperator<T> throwingUnaryOperator(
+            final ThrowingUnaryOperator<T, X> operator, final Strategy strategy) {
+        return strategy.adapt(operator);
+    }
+
     public static <T, X extends Throwable> ThrowingPredicate<T, X> throwingPredicate(
             final ThrowingPredicate<T, X> predicate) {
         return predicate;
@@ -89,6 +101,16 @@ public final class FauxPas {
     public static <T, U, R, X extends Throwable> BiFunction<T, U, R> throwingBiFunction(
             final ThrowingBiFunction<T, U, R, X> function, final Strategy strategy) {
         return strategy.adapt(function);
+    }
+
+    public static <T, X extends Throwable> ThrowingBinaryOperator<T, X> throwingBinaryOperator(
+            final ThrowingBinaryOperator<T, X> operator) {
+        return operator;
+    }
+
+    public static <T, X extends Throwable> BinaryOperator<T> throwingBinaryOperator(
+            final ThrowingBinaryOperator<T, X> operator, final Strategy strategy) {
+        return strategy.adapt(operator);
     }
 
     public static <T, U, X extends Throwable> ThrowingBiPredicate<T, U, X> throwingBiPredicate(

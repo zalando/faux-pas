@@ -18,7 +18,7 @@ public class IgnoreStrategyTest extends StrategyTest {
     }
 
     @Override
-    protected void testOriginalWithException(final Throwable expected, final Executable executable) throws Throwable {
+    protected void testOriginalWithException(final Throwable expected, final Executable executable) {
         final Throwable actual = expectThrows(Throwable.class, executable);
         assertThat(actual, is(sameInstance(expected)));
     }
