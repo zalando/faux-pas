@@ -36,11 +36,10 @@ public final class TryWith {
             @Nullable final O outer, @Nullable final I inner, final ThrowingBiFunction<O, I, T, X> function) throws X {
 
         // not exactly sure why those explicit type parameters are needed
-        return TryWith.<O, T, X>tryWith(outer, (ಠ_ಠ) -> {
-            return tryWith(inner, (ツ) -> {
-                return function.tryApply(outer, inner);
-            });
-        });
+        return TryWith.<O, T, X>tryWith(outer, (ಠ_ಠ) ->
+                tryWith(inner, (ツ) -> {
+                    return function.tryApply(outer, inner);
+                }));
     }
 
     public static <R extends AutoCloseable, T, X extends Throwable> T tryWith(@Nullable final R resource,

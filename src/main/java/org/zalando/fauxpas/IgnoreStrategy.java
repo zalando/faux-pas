@@ -55,7 +55,7 @@ enum IgnoreStrategy implements Strategy {
 
     @Override
     public <T, X extends Throwable> UnaryOperator<T> adapt(final ThrowingUnaryOperator<T, X> operator) {
-        return t -> apply(operator::tryApply, t);
+        return t -> apply(operator, t);
     }
 
     private  <T, R, X extends Throwable> R apply(final ThrowingFunction<T, R, X> function, final T t) {
@@ -98,7 +98,7 @@ enum IgnoreStrategy implements Strategy {
 
     @Override
     public <T, X extends Throwable> BinaryOperator<T> adapt(final ThrowingBinaryOperator<T,X> function) {
-        return (t, u) -> apply(function::tryApply, t, u);
+        return (t, u) -> apply(function, t, u);
     }
 
     private  <T, U, R, X extends Throwable> R apply(final ThrowingBiFunction<T, U, R, X> function, final T t, final U u) {
