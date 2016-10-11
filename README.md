@@ -15,7 +15,7 @@ _**F**aux  **P**as_ is library that simplifies error handling for **F**unctional
 issue that none of the functional interfaces in the Java Runtime by default is allowed to throw checked exceptions.
 
 - **Technology stack**: Java 8+, functional interfaces
-- **Status**:  0.x, currently being ported from [Riptide](https://www.github.com/zalando/riptide)
+- **Status**:  0.x, originally ported from [Riptide](https://www.github.com/zalando/riptide), used in producation
 
 ## Example
 
