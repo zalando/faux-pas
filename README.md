@@ -15,7 +15,7 @@ _**F**aux  **P**as_ is library that simplifies error handling for **F**unctional
 issue that none of the functional interfaces in the Java Runtime by default is allowed to throw checked exceptions.
 
 - **Technology stack**: Java 8+, functional interfaces
-- **Status**:  0.x, originally ported from [Riptide](https://www.github.com/zalando/riptide), used in producation
+- **Status**:  0.x, originally ported from [Riptide](https://www.github.com/zalando/riptide), used in production
 
 ## Example
 
@@ -26,15 +26,11 @@ interface Client {
 
 Function<String, User> readUser = throwingFunction(client::read);
 readUser.apply("Bob"); // may throw IOException directly
-
-Function<String, User> readUser = throwingFunction(client::read, rethrow(unchecked()));
-readUser.apply("Bob"); // may throw UncheckedIOException
 ```
 
 ## Features
 
 - Checked exceptions for functional interfaces 
-- Flexible strategies for error handling
 - Compatible with the JDK types
 
 ## Dependencies
@@ -73,7 +69,7 @@ Add the following dependency to your project:
 
 The followings statements apply to each of them:
 - extends the official interface, i.e. they are 100% compatible
-- defaults to [*sneakily throwing*](https://projectlombok.org/features/SneakyThrows.html) the original exception
+- [*sneakily throws*](https://projectlombok.org/features/SneakyThrows.html) the original exception
 
 ### Creation
 
@@ -99,50 +95,6 @@ As a workaround there is a static *factory* method for every interface type in`F
 List<User> users = names.stream()
     .map(throwingFunction(client::read))
     .collect(toList());
-```
-
-### Strategies
-
-Every factory method `FauxPas.throwing*(..)` can optionally be used with a `Strategy`, a pluggable mechanism that
-basically performs the transformation from `Throwing*` ➙ `*` while customizing the error handling strategy. There are
-three strategies available by default:
-
-#### Logging
-
-The `FauxPas.loggingAnd(..)` strategy handles any raised exception by logging them to a customizable logger and falling
-back to another strategy, e.g. one of the remaining:
-
-```java
-throwingFunction(client::read, loggingAnd(rethrow(sneakily())))
-```
-
-#### Ignore
-
-The `FauxPas.ignore()` strategy handles any raised exception by ignoring them completely.
-
-#### Rethrow
-
-The `FauxPas.rethrow()` strategy handles any raised exception by either rethrowing them directly, e.g. `Error` and
-`RuntimeException` or by wrapping them in meaningful unchecked exceptions, e.g. `UncheckedIOException` or
-`RuntimeException`. It allows to customize the whole transformation process or only the fallback part:
-
-```java
-// completely defines exception transformation
-throwingFunction(client::read, rethrow(throwable -> {
-    // transform here
-}))
-```
-
-```java
-// only transform unmapped exceptions
-throwingFunction(client::read, rethrow(unchecked(throwable -> {
-    // transform everything that is neither Error nor RuntimeException
-})))
-```
-
-```java
-// uses Lombok's @SneakyThrows to re-throw checked exceptions without declaring it
-throwingFunction(client::read, rethrow(unchecked(sneakily())))
 ```
 
 ### Try-with-resources alternative

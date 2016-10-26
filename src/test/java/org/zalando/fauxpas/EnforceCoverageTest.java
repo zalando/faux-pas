@@ -17,16 +17,6 @@ public final class EnforceCoverageTest {
     }
 
     @Test
-    public void shouldUseDefaultRethrowConstructor() {
-        new FauxPas.DefaultRethrow();
-    }
-
-    @Test
-    public void shouldUseSneakilyConstructor() {
-        new FauxPas.Sneakily();
-    }
-
-    @Test
     public void shouldUseTryWithConstructor() {
         new TryWith();
     }
