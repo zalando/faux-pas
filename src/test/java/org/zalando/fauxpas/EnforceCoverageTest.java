@@ -9,15 +9,15 @@ import org.junit.runner.RunWith;
 @Hack
 @OhNoYouDidnt
 @RunWith(JUnitPlatform.class)
-public final class EnforceCoverageTest {
+final class EnforceCoverageTest {
 
     @Test
-    public void shouldUseFauxPasConstructor() {
+    void shouldUseFauxPasConstructor() {
         new FauxPas();
     }
 
     @Test
-    public void shouldUseTryWithConstructor() {
+    void shouldUseTryWithConstructor() {
         new TryWith();
     }
 

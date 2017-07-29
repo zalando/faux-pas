@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.zalando.fauxpas.TryWith.tryWith;
 
 @RunWith(JUnitPlatform.class)
-public final class TryWithBiFunctionTest {
+final class TryWithBiFunctionTest {
 
     private final Object value = new Object();
 
@@ -33,7 +33,7 @@ public final class TryWithBiFunctionTest {
     private final ThrowingBiFunction<Closeable, Closeable, ?, Exception> function = mock(ThrowingBiFunction.class);
 
     @Test
-    public void shouldReturnWithoutException() throws Exception {
+    void shouldReturnWithoutException() throws Exception {
         doReturn(value).when(function).tryApply(any(), any());
 
         final Object actual = run();
@@ -41,88 +41,88 @@ public final class TryWithBiFunctionTest {
     }
 
     @Test
-    public void shouldPassResources() throws Exception {
+    void shouldPassResources() throws Exception {
         run();
         verify(function).tryApply(outer, inner);
     }
 
     @Test
-    public void shouldNotFailOnNullResource() throws Exception {
+    void shouldNotFailOnNullResource() throws Exception {
         tryWith(null, null, function);
         verify(function).tryApply(null, null);
     }
 
     @Test
-    public void shouldNotFailOnNullResourceWithException() throws Exception {
+    void shouldNotFailOnNullResourceWithException() throws Exception {
         doThrow(new Exception()).when(function).tryApply(any(), any());
-        expectThrows(Exception.class, () -> tryWith(null, null, function));
+        assertThrows(Exception.class, () -> tryWith(null, null, function));
     }
 
     @Test
-    public void shouldCloseWithoutException() throws Exception {
+    void shouldCloseWithoutException() throws Exception {
         run();
         verify(inner).close();
         verify(outer).close();
     }
 
     @Test
-    public void shouldThrowException() throws Exception {
+    void shouldThrowException() throws Exception {
         final Exception exception = new Exception();
         doThrow(exception).when(function).tryApply(any(), any());
-        final Exception e = expectThrows(Exception.class, this::run);
+        final Exception e = assertThrows(Exception.class, this::run);
         assertThat(e, is(sameInstance(exception)));
     }
 
     @Test
-    public void shouldCloseWithException() throws Exception {
+    void shouldCloseWithException() throws Exception {
         doThrow(new Exception()).when(function).tryApply(any(), any());
-        expectThrows(Exception.class, this::run);
+        assertThrows(Exception.class, this::run);
         verify(outer).close();
         verify(inner).close();
     }
 
     @Test
-    public void shouldFailToCloseOuter() throws Exception {
+    void shouldFailToCloseOuter() throws Exception {
         shouldFailToClose(outer);
     }
 
     @Test
-    public void shouldFailToCloseInner() throws Exception {
+    void shouldFailToCloseInner() throws Exception {
         shouldFailToClose(inner);
     }
 
-    public void shouldFailToClose(final Closeable resource) throws IOException {
+    void shouldFailToClose(final Closeable resource) throws IOException {
         final IOException ioException = new IOException();
         doThrow(ioException).when(resource).close();
-        final IOException e = expectThrows(IOException.class, this::run);
+        final IOException e = assertThrows(IOException.class, this::run);
         assertThat(e, is(sameInstance(ioException)));
     }
 
     @Test
-    public void shouldFailToCloseOuterWithException() throws Exception {
+    void shouldFailToCloseOuterWithException() throws Exception {
         shouldFailToCloseWithException(outer);
     }
 
     @Test
-    public void shouldFailToCloseInnerWithException() throws Exception {
+    void shouldFailToCloseInnerWithException() throws Exception {
         shouldFailToCloseWithException(inner);
     }
 
-    public void shouldFailToCloseWithException(final Closeable resource) throws Exception {
+    void shouldFailToCloseWithException(final Closeable resource) throws Exception {
         final Exception exception = new Exception();
         final IOException ioException = new IOException();
 
         doThrow(exception).when(function).tryApply(any(), any());
         doThrow(ioException).when(resource).close();
 
-        final Exception e = expectThrows(Exception.class, this::run);
+        final Exception e = assertThrows(Exception.class, this::run);
 
         assertThat(e, is(sameInstance(exception)));
         assertThat(e.getSuppressed(), hasItemInArray(sameInstance(ioException)));
     }
 
     @Test
-    public void shouldFailToCloseOuterAndInnerWithException() throws Exception {
+    void shouldFailToCloseOuterAndInnerWithException() throws Exception {
         final Exception exception = new Exception();
         final IOException ioException = new IOException();
         final IOException secondIOException = new IOException();
@@ -131,14 +131,14 @@ public final class TryWithBiFunctionTest {
         doThrow(ioException).when(inner).close();
         doThrow(secondIOException).when(outer).close();
 
-        final Exception e = expectThrows(Exception.class, this::run);
+        final Exception e = assertThrows(Exception.class, this::run);
 
         assertThat(e, is(sameInstance(exception)));
         assertThat(e.getSuppressed(), arrayContaining(asList(
                 sameInstance(ioException), sameInstance(secondIOException))));
     }
 
-    public Object run() throws Exception {
+    Object run() throws Exception {
         return tryWith(outer, inner, function);
     }
 
