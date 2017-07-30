@@ -1,6 +1,7 @@
 package org.zalando.fauxpas;
 
 import java.util.concurrent.CompletionException;
+import java.util.function.Function;
 
 public final class FauxPas {
 
@@ -58,23 +59,21 @@ public final class FauxPas {
         return predicate;
     }
 
-    public static <R> ThrowingFunction<Throwable, R, Throwable> partially(
+    public static <R> Function<Throwable, R> partially(
             final ThrowingFunction<Throwable, R, Throwable> function) {
-        return e -> {
+        return throwable -> {
             try {
-                return function.tryApply(unpack(e));
-            } catch (final Throwable throwable) {
-                throw pack(throwable);
+                return function.tryApply(unpack(throwable));
+            } catch (final RuntimeException e) {
+                throw e;
+            } catch (final Throwable e) {
+                throw new CompletionException(e);
             }
         };
     }
 
     private static Throwable unpack(final Throwable throwable) {
         return throwable instanceof CompletionException ? throwable.getCause() : throwable;
-    }
-
-    private static Throwable pack(final Throwable throwable) {
-        return throwable instanceof CompletionException ? throwable : new CompletionException(throwable);
     }
 
 }
