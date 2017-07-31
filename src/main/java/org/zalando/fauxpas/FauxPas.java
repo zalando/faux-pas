@@ -59,8 +59,7 @@ public final class FauxPas {
         return predicate;
     }
 
-    public static <R> Function<Throwable, R> partially(
-            final ThrowingFunction<Throwable, R, Throwable> function) {
+    public static <R> Function<Throwable, R> partially(final ThrowingFunction<Throwable, R, Throwable> function) {
         return throwable -> {
             try {
                 return function.tryApply(unpack(throwable));
