@@ -71,7 +71,7 @@ The followings statements apply to each of them:
 - extends the official interface, i.e. they are 100% compatible
 - [*sneakily throws*](https://projectlombok.org/features/SneakyThrows.html) the original exception
 
-### Creation
+#### Creation
 
 The way the Java runtime implemented functional interfaces always requires additional type information, either by
 using a cast or a local variable:
@@ -119,6 +119,58 @@ return tryWith(new BufferedReader(new FileReader(path)), br ->
     br.readLine()
 );
 ```
+
+### CompletableFuture.exceptionally(..)
+
+[`CompletableFuture.exceptionally(..)`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html#exceptionally-java.util.function.Function-)
+is a very powerful but often overlooked tool. It allows to inject [partial exception handling](https://stackoverflow.com/questions/37032990/separated-exception-handling-of-a-completablefuture)
+into a `CompletableFuture`:
+
+```java
+future.exceptionally(e -> {
+    Throwable t = e instanceof CompletionException ? e.getCause() : e;
+
+    if (t instanceof NoRouteToHostException) {
+        return fallbackValueFor(e);
+    }
+
+    throw e instanceof CompletionException ? e : new CompletionException(t);
+})
+```
+
+Unfortunately it has a contract that makes it harder to use than it needs to:
+
+- It takes a [`Throwable`](https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) as an argument, but
+  doesn't allow to re-throw it *as-is*. This can be circumvented by optionally wrapping the argument in a
+  [`CompletionException`](http://cs.oswego.edu/pipermail/concurrency-interest/2014-August/012910.html) before
+  rethrowing it.
+- The throwable argument is [sometimes wrapped](https://stackoverflow.com/questions/27430255/surprising-behavior-of-java-8-completablefuture-exceptionally-method) 
+  inside a [`CompletionException`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionException.html)
+  and sometimes it's not, depending on whether there is any other computation step before the `exceptionally(..)` call
+  or not.
+  
+In order to use the operation correctly one needs to follow these rules:
+1. Unwrap given throwable if it's an instance of `CompletionException`.
+2. Wrap exceptions in a `CompletionException` before throwing.
+
+`FauxPas.partially(..)` relives some of the pain by changing the interface and contract a bit to make it more usable.
+The following example is functionally equivalent to the one from above:
+
+```java
+future.exceptionally(partially(e -> {
+    if (e instanceof NoRouteToHostException) {
+        return fallbackValueFor(e);
+    }
+
+    throw e;
+}))
+```
+
+1. Takes a `ThrowingFunction<Throwable, T, Throwable>`, i.e. it allows clients to
+    - directly re-throw the throwable argument
+    - throw any exception during exception handling *as-is*
+2. Will automatically unwrap a `CompletionException` before passing it to the given function.
+3. Will automatically wrap any thrown `Exception` inside a `CompletionException`, if needed.
 
 ## Getting Help
 
