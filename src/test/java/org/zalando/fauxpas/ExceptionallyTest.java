@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,6 +55,19 @@ class ExceptionallyTest {
         original.complete("unused");
 
         assertThat(unit.join(), is("fallback"));
+    }
+
+    @Test
+    void shouldUseFallbackWhenImplicitlyCompletedExceptionallyWithNullCause() {
+        final CompletableFuture<String> original = new CompletableFuture<>();
+        final CompletableFuture<String> unit = original
+                .thenApply(failWith(new CompletionException(null)))
+                .exceptionally(partially(fallbackIf(UnsupportedOperationException.class::isInstance)));
+
+        original.complete("unused");
+
+        final CompletionException thrown = assertThrows(CompletionException.class, unit::join);
+        assertThat(thrown.getCause(), is(nullValue()));
     }
 
     @Test
