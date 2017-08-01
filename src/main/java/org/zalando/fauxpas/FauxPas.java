@@ -62,10 +62,8 @@ public final class FauxPas {
 
     public static <R> Function<Throwable, R> partially(final ThrowingFunction<Throwable, R, Throwable> function) {
         return throwable -> {
-            final Throwable actual = unpack(throwable);
-
             try {
-                return function.tryApply(actual);
+                return function.tryApply(unpack(throwable));
             } catch (final RuntimeException e) {
                 throw e;
             } catch (final Throwable e) {
