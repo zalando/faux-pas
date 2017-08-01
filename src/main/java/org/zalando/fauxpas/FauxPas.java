@@ -1,5 +1,9 @@
 package org.zalando.fauxpas;
 
+import javax.annotation.Nullable;
+import java.util.concurrent.CompletionException;
+import java.util.function.Function;
+
 public final class FauxPas {
 
     FauxPas() {
@@ -54,6 +58,23 @@ public final class FauxPas {
     public static <T, U, X extends Throwable> ThrowingBiPredicate<T, U, X> throwingBiPredicate(
             final ThrowingBiPredicate<T, U, X> predicate) {
         return predicate;
+    }
+
+    public static <R> Function<Throwable, R> partially(final ThrowingFunction<Throwable, R, Throwable> function) {
+        return throwable -> {
+            try {
+                return function.tryApply(unpack(throwable));
+            } catch (final CompletionException e) {
+                throw e;
+            } catch (final Throwable e) {
+                throw new CompletionException(e);
+            }
+        };
+    }
+
+    private static Throwable unpack(final Throwable throwable) {
+        final Throwable cause = throwable.getCause();
+        return throwable instanceof CompletionException && cause != null ? cause : throwable;
     }
 
 }

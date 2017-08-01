@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.zalando.fauxpas.TryWith.tryWith;
 
 @RunWith(JUnitPlatform.class)
-public final class TryWithFunctionTest {
+final class TryWithFunctionTest {
 
     private final Object value = new Object();
 
@@ -30,13 +30,13 @@ public final class TryWithFunctionTest {
     private final ThrowingFunction<Closeable, ?, Exception> function = mock(ThrowingFunction.class);
 
     @Test
-    public void shouldPassResource() throws Exception {
+    void shouldPassResource() throws Exception {
         run();
         verify(function).tryApply(resource);
     }
 
     @Test
-    public void shouldReturnWithoutException() throws Exception {
+    void shouldReturnWithoutException() throws Exception {
         doReturn(value).when(function).tryApply(any());
 
         final Object actual = run();
@@ -44,60 +44,60 @@ public final class TryWithFunctionTest {
     }
 
     @Test
-    public void shouldCloseWithoutException() throws Exception {
+    void shouldCloseWithoutException() throws Exception {
         run();
         verify(resource).close();
     }
 
     @Test
-    public void shouldNotFailOnNullResource() throws Exception {
+    void shouldNotFailOnNullResource() throws Exception {
         tryWith(null, function);
         verify(function).tryApply(null);
     }
 
     @Test
-    public void shouldNotFailOnNullResourceWithException() throws Exception {
+    void shouldNotFailOnNullResourceWithException() throws Exception {
         doThrow(new Exception()).when(function).tryApply(any());
-        expectThrows(Exception.class, () -> tryWith(null, function));
+        assertThrows(Exception.class, () -> tryWith(null, function));
     }
 
     @Test
-    public void shouldThrowException() throws Exception {
+    void shouldThrowException() throws Exception {
         final Exception exception = new Exception();
         doThrow(exception).when(function).tryApply(any());
-        final Exception e = expectThrows(Exception.class, this::run);
+        final Exception e = assertThrows(Exception.class, this::run);
         assertThat(e, is(sameInstance(exception)));
     }
 
     @Test
-    public void shouldCloseWithException() throws Exception {
+    void shouldCloseWithException() throws Exception {
         doThrow(new Exception()).when(function).tryApply(any());
-        expectThrows(Exception.class, this::run);
+        assertThrows(Exception.class, this::run);
         verify(resource).close();
     }
 
     @Test
-    public void shouldFailToClose() throws Exception {
+    void shouldFailToClose() throws Exception {
         final IOException ioException = new IOException();
         doThrow(ioException).when(resource).close();
-        final IOException e = expectThrows(IOException.class, this::run);
+        final IOException e = assertThrows(IOException.class, this::run);
         assertThat(e, is(sameInstance(ioException)));
     }
 
     @Test
-    public void shouldFailToCloseWithException() throws Exception {
+    void shouldFailToCloseWithException() throws Exception {
         final Exception exception = new Exception();
         final IOException ioException = new IOException();
         doThrow(exception).when(function).tryApply(any());
         doThrow(ioException).when(resource).close();
 
-        final Exception e = expectThrows(Exception.class, this::run);
+        final Exception e = assertThrows(Exception.class, this::run);
 
         assertThat(e, is(sameInstance(exception)));
         assertThat(e.getSuppressed(), hasItemInArray(sameInstance(ioException)));
     }
 
-    public Object run() throws Exception {
+    private Object run() throws Exception {
         return tryWith(resource, function);
     }
 
