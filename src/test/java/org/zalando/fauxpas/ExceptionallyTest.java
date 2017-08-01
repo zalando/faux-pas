@@ -13,6 +13,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,12 +57,13 @@ class ExceptionallyTest {
     }
 
     @Test
-    void shouldRethrowOriginalCompletionExceptionWhenImplicitlyCompletedExceptionally() {
+    void shouldNotRethrowOriginalCompletionExceptionWhenImplicitlyCompletedExceptionally() {
         final RuntimeException exception = new CompletionException(new AssertionError());
         final CompletionException thrown = shouldRethrowOriginalWhenImplicitlyCompletedExceptionally(exception, e -> {
             throw new CompletionException(e);
         });
-        assertThat(thrown, is(sameInstance(exception)));
+        assertThat(thrown, is(not(sameInstance(exception))));
+        assertThat(thrown.getCause(), is(sameInstance(exception.getCause())));
     }
 
     @Test

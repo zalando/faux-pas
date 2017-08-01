@@ -68,23 +68,11 @@ public final class FauxPas {
                 try {
                     return function.tryApply(cause);
                 } catch (final CompletionException e) {
-                    if (e.getCause() == cause) {
-                        throw original;
-                    } else {
-                        throw e;
-                    }
+                    throw e;
                 } catch (final RuntimeException e) {
-                    if (e == cause) {
-                        throw original;
-                    } else {
-                        throw e;
-                    }
+                    throw e == cause ? original : e;
                 } catch (final Throwable e) {
-                    if (e == cause) {
-                        throw original;
-                    } else {
-                        throw new CompletionException(e);
-                    }
+                    throw e == cause ? original : new CompletionException(e);
                 }
             } else {
                 try {
