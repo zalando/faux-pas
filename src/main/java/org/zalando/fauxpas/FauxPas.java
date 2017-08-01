@@ -73,9 +73,8 @@ public final class FauxPas {
     }
 
     private static Throwable unpack(final Throwable throwable) {
-        final boolean isCompletionException = throwable instanceof CompletionException;
-        final boolean hasCause = throwable.getCause() != null;
-        return isCompletionException && hasCause ? throwable.getCause() : throwable;
+        final Throwable cause = throwable.getCause();
+        return throwable instanceof CompletionException && cause != null ? cause : throwable;
     }
 
 }
