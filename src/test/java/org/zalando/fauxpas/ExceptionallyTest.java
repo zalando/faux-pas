@@ -39,7 +39,7 @@ class ExceptionallyTest {
         final CompletableFuture<String> unit = original.exceptionally(
                 partially(fallbackIf(UnsupportedOperationException.class::isInstance)));
 
-        original.completeExceptionally(new UnsupportedOperationException());
+        original.completeExceptionally(new UnsupportedOperationException(new IOException()));
 
         assertThat(unit.join(), is("fallback"));
     }
@@ -48,7 +48,7 @@ class ExceptionallyTest {
     void shouldUseFallbackWhenImplicitlyCompletedExceptionally() {
         final CompletableFuture<String> original = new CompletableFuture<>();
         final CompletableFuture<String> unit = original
-                .thenApply(failWith(new CompletionException(new UnsupportedOperationException())))
+                .thenApply(failWith(new CompletionException(new UnsupportedOperationException(new IOException()))))
                 .exceptionally(partially(fallbackIf(UnsupportedOperationException.class::isInstance)));
 
         original.complete("unused");

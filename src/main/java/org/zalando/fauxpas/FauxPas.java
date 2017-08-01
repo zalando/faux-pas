@@ -1,5 +1,6 @@
 package org.zalando.fauxpas;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 
@@ -61,30 +62,21 @@ public final class FauxPas {
 
     public static <R> Function<Throwable, R> partially(final ThrowingFunction<Throwable, R, Throwable> function) {
         return throwable -> {
-            if (throwable instanceof CompletionException) {
-                final CompletionException original = (CompletionException) throwable;
-                final Throwable cause = original.getCause();
+            final Throwable actual = unpack(throwable);
 
-                try {
-                    return function.tryApply(cause);
-                } catch (final CompletionException e) {
-                    throw e;
-                } catch (final RuntimeException e) {
-                    throw e == cause ? original : e;
-                } catch (final Throwable e) {
-                    throw e == cause ? original : new CompletionException(e);
-                }
-            } else {
-                try {
-                    return function.tryApply(throwable);
-                } catch (final RuntimeException e) {
-                    throw e;
-                } catch (final Throwable e) {
-                    throw new CompletionException(e);
-                }
+            try {
+                return function.tryApply(actual);
+            } catch (final RuntimeException e) {
+                throw e;
+            } catch (final Throwable e) {
+                throw new CompletionException(e);
             }
-
         };
+    }
+
+    @Nullable
+    private static Throwable unpack(final Throwable throwable) {
+        return throwable instanceof CompletionException ? throwable.getCause() : throwable;
     }
 
 }
