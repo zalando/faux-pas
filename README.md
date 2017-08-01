@@ -170,7 +170,8 @@ future.exceptionally(partially(e -> {
     - directly re-throw the throwable argument
     - throw any exception during exception handling *as-is*
 2. Will automatically unwrap a `CompletionException` before passing it to the given function.
-   I.e. the supplied function will never have to deal with `CompletionException` directly.
+   I.e. the supplied function will never have to deal with `CompletionException` directly. Except for the rare occasion
+   that the `CompletionException` has no cause, in which case it will be passed to the given function. 
 3. Will automatically wrap any thrown `Exception` inside a `CompletionException`, if needed.
 
 ## Getting Help
