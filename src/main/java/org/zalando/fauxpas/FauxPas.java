@@ -64,7 +64,7 @@ public final class FauxPas {
         return throwable -> {
             try {
                 return function.tryApply(unpack(throwable));
-            } catch (final RuntimeException e) {
+            } catch (final CompletionException e) {
                 throw e;
             } catch (final Throwable e) {
                 throw new CompletionException(e);
