@@ -61,18 +61,42 @@ public final class FauxPas {
 
     public static <R> Function<Throwable, R> partially(final ThrowingFunction<Throwable, R, Throwable> function) {
         return throwable -> {
-            try {
-                return function.tryApply(unpack(throwable));
-            } catch (final RuntimeException e) {
-                throw e;
-            } catch (final Throwable e) {
-                throw new CompletionException(e);
-            }
-        };
-    }
+            if (throwable instanceof CompletionException) {
+                final CompletionException original = (CompletionException) throwable;
+                final Throwable cause = original.getCause();
 
-    private static Throwable unpack(final Throwable throwable) {
-        return throwable instanceof CompletionException ? throwable.getCause() : throwable;
+                try {
+                    return function.tryApply(cause);
+                } catch (final CompletionException e) {
+                    if (e.getCause() == cause) {
+                        throw original;
+                    } else {
+                        throw e;
+                    }
+                } catch (final RuntimeException e) {
+                    if (e == cause) {
+                        throw original;
+                    } else {
+                        throw e;
+                    }
+                } catch (final Throwable e) {
+                    if (e == cause) {
+                        throw original;
+                    } else {
+                        throw new CompletionException(e);
+                    }
+                }
+            } else {
+                try {
+                    return function.tryApply(throwable);
+                } catch (final RuntimeException e) {
+                    throw e;
+                } catch (final Throwable e) {
+                    throw new CompletionException(e);
+                }
+            }
+
+        };
     }
 
 }
