@@ -1,14 +1,12 @@
 package org.zalando.fauxpas;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.function.Function;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.zalando.fauxpas.FauxPas.throwingBiConsumer;
 import static org.zalando.fauxpas.FauxPas.throwingBiFunction;
@@ -24,7 +22,6 @@ import static org.zalando.fauxpas.FauxPas.throwingUnaryOperator;
 /**
  * Tests the default implementation of e.g. {@link Function#apply(Object)} in {@link ThrowingFunction}.
  */
-@RunWith(JUnitPlatform.class)
 final class DefaultImplementationTest {
 
     @SuppressWarnings("ThrowableInstanceNeverThrown") // we're in fact throwing it, multiple times even...

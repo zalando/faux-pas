@@ -1,18 +1,16 @@
 package org.zalando.fauxpas;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.io.Closeable;
 import java.io.IOException;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -21,7 +19,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.zalando.fauxpas.TryWith.tryWith;
 
-@RunWith(JUnitPlatform.class)
 final class TryWithBiFunctionTest {
 
     private final Object value = new Object();
@@ -91,7 +88,7 @@ final class TryWithBiFunctionTest {
         shouldFailToClose(inner);
     }
 
-    void shouldFailToClose(final Closeable resource) throws IOException {
+    private void shouldFailToClose(final Closeable resource) throws IOException {
         final IOException ioException = new IOException();
         doThrow(ioException).when(resource).close();
         final IOException e = assertThrows(IOException.class, this::run);
@@ -108,7 +105,7 @@ final class TryWithBiFunctionTest {
         shouldFailToCloseWithException(inner);
     }
 
-    void shouldFailToCloseWithException(final Closeable resource) throws Exception {
+    private void shouldFailToCloseWithException(final Closeable resource) throws Exception {
         final Exception exception = new Exception();
         final IOException ioException = new IOException();
 
@@ -138,7 +135,7 @@ final class TryWithBiFunctionTest {
                 sameInstance(ioException), sameInstance(secondIOException))));
     }
 
-    Object run() throws Exception {
+    private Object run() throws Exception {
         return tryWith(outer, inner, function);
     }
 
