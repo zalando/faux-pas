@@ -1,8 +1,11 @@
 package org.zalando.fauxpas;
 
-import javax.annotation.Nullable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import static java.util.function.Function.identity;
 
 public final class FauxPas {
 
@@ -85,6 +88,21 @@ public final class FauxPas {
     private static Throwable unpack(final Throwable throwable) {
         final Throwable cause = throwable.getCause();
         return throwable instanceof CompletionException && cause != null ? cause : throwable;
+    }
+
+    public static <T> CompletableFuture<T> handleCompose(final CompletableFuture<T> future,
+            final BiFunction<T, Throwable, CompletableFuture<T>> function) {
+        return future
+                .handle(function)
+                .thenCompose(identity());
+    }
+
+    public static <T> CompletableFuture<T> exceptionallyCompose(final CompletableFuture<T> future,
+            final Function<Throwable, CompletableFuture<T>> function) {
+        return future
+                .thenApply(CompletableFuture::completedFuture)
+                .exceptionally(function)
+                .thenCompose(identity());
     }
 
 }

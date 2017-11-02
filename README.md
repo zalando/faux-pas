@@ -120,7 +120,7 @@ return tryWith(new BufferedReader(new FileReader(path)), br ->
 );
 ```
 
-### CompletableFuture.exceptionally(..)
+### CompletableFuture's *exceptionally*
 
 [`CompletableFuture.exceptionally(..)`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html#exceptionally-java.util.function.Function-)
 is a very powerful but often overlooked tool. It allows to inject [partial exception handling](https://stackoverflow.com/questions/37032990/separated-exception-handling-of-a-completablefuture)
@@ -182,6 +182,15 @@ particular case:
 future.exceptionally(partially(NoRouteToHostException.class, this::fallbackValueFor))
 ```
 
+Other missing pieces in `CompletableFuture`'s API are `exceptionallyCompose` and `handleCompose`. Both can be seen as
+a combination of `exceptionally` + `compose` and `handle` + `compose` respectively. They basically allow to supply
+another `CompletableFuture` rather than concrete values directly. This is allows for asynchronous fallbacks:
+
+```java
+exceptionallyCompose(users.find(name), e -> archive.find(name))
+```
+
+
 ## Getting Help
 
 If you have questions, concerns, bug reports, etc., please file an issue in this repository's [Issue Tracker](../../issues).
@@ -195,4 +204,5 @@ more details, check the [contribution guidelines](CONTRIBUTING.md).
 
 - [Lombok's `@SneakyThrows`](https://projectlombok.org/features/SneakyThrows.html)
 - [Durian's Errors](https://github.com/diffplug/durian)
+- [Spotify's Completable Futures](https://github.com/spotify/completable-futures)
 
