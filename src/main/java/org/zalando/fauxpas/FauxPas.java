@@ -60,6 +60,16 @@ public final class FauxPas {
         return predicate;
     }
 
+    public static <T extends Throwable, R> Function<Throwable, R> partially(final Class<T> type,
+            final ThrowingFunction<T, R, Throwable> function) {
+        return partially(e -> {
+            if (type.isInstance(e)) {
+                return function.apply(type.cast(e));
+            }
+            throw e;
+        });
+    }
+
     public static <R> Function<Throwable, R> partially(final ThrowingFunction<Throwable, R, Throwable> function) {
         return throwable -> {
             try {
