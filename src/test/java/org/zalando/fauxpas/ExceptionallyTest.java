@@ -158,6 +158,31 @@ class ExceptionallyTest {
         assertThat(thrown.getCause(), is(sameInstance(exception)));
     }
 
+    @Test
+    void shouldHandleIfInstanceOf() {
+        final CompletableFuture<String> original = new CompletableFuture<>();
+        final CompletableFuture<String> unit = original.exceptionally(partially(
+                IllegalStateException.class, e -> "foo"));
+
+        final IllegalStateException exception = new IllegalStateException();
+        original.completeExceptionally(exception);
+
+        assertThat(unit.join(), is("foo"));
+    }
+
+    @Test
+    void shouldThrowIfNotInstanceOf() {
+        final CompletableFuture<String> original = new CompletableFuture<>();
+        final CompletableFuture<String> unit = original.exceptionally(partially(
+                IllegalArgumentException.class, e -> "foo"));
+
+        final IllegalStateException exception = new IllegalStateException();
+        original.completeExceptionally(exception);
+
+        final CompletionException thrown = assertThrows(CompletionException.class, unit::join);
+        assertThat(thrown.getCause(), is(sameInstance(exception)));
+    }
+
     private Function<String, String> failWith(final RuntimeException e) {
         return result -> {
             throw e;

@@ -174,6 +174,14 @@ future.exceptionally(partially(e -> {
    that the `CompletionException` has no cause, in which case it will be passed to the given function. 
 3. Will automatically wrap any thrown `Exception` inside a `CompletionException`, if needed.
 
+The last example is actually so common, that there is an overloaded version of `partially` that caters for this use 
+particular case:
+
+```java
+
+future.exceptionally(partially(NoRouteToHostException.class, this::fallbackValueFor))
+```
+
 ## Getting Help
 
 If you have questions, concerns, bug reports, etc., please file an issue in this repository's [Issue Tracker](../../issues).
