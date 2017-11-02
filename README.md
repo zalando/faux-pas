@@ -4,7 +4,7 @@
 
 [![Build Status](https://img.shields.io/travis/zalando/faux-pas/master.svg)](https://travis-ci.org/zalando/faux-pas)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/faux-pas/master.svg)](https://coveralls.io/r/zalando/faux-pas)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.zalando/faux-pas/badge.svg)](http://www.javadoc.io/doc/org.zalando/faux-pas)
+[![Javadoc](http://javadoc.io/badge/org.zalando/faux-pas.svg)](http://www.javadoc.io/doc/org.zalando/faux-pas)
 [![Release](https://img.shields.io/github/release/zalando/faux-pas.svg)](https://github.com/zalando/faux-pas/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/faux-pas.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/faux-pas)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zalando/faux-pas/master/LICENSE)
