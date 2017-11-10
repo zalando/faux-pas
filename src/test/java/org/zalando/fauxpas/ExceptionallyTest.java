@@ -10,13 +10,16 @@ import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.zalando.fauxpas.FauxPas.exceptionallyCompose;
 import static org.zalando.fauxpas.FauxPas.partially;
 
 class ExceptionallyTest {
@@ -29,6 +32,19 @@ class ExceptionallyTest {
         original.complete("result");
 
         assertThat(unit.join(), is("result"));
+    }
+
+    @Test
+    void shouldCascade() {
+        final CompletableFuture<String> original = new CompletableFuture<>();
+        final CompletableFuture<String> unit = original.exceptionally(partially(e -> {
+            throw new IllegalStateException();
+        }));
+
+        original.completeExceptionally(new IllegalArgumentException());
+
+        final CompletionException thrown = assertThrows(CompletionException.class, unit::join);
+        assertThat(thrown.getCause(), is(instanceOf(IllegalStateException.class)));
     }
 
     @Test
