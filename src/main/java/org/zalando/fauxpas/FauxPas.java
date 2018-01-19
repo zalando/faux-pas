@@ -5,6 +5,7 @@ import java.util.concurrent.CompletionException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
 
 public final class FauxPas {
@@ -81,6 +82,18 @@ public final class FauxPas {
                 throw e;
             } catch (final Throwable e) {
                 throw new CompletionException(e);
+            }
+        };
+    }
+
+    public static <R, T extends Throwable> ThrowingBiConsumer<R, Throwable, Throwable> failedWith(
+            final Class<T> type, final ThrowingConsumer<? super T, Throwable> action) {
+        return (result, throwable) -> {
+            if (nonNull(throwable)) {
+                final Throwable unpacked = unpack(throwable);
+                if (type.isInstance(unpacked)) {
+                    action.tryAccept(type.cast(unpacked));
+                }
             }
         };
     }
