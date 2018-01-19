@@ -120,7 +120,7 @@ return tryWith(new BufferedReader(new FileReader(path)), br ->
 );
 ```
 
-### CompletableFuture's *exceptionally*
+### CompletableFuture.exceptionally(Function)
 
 [`CompletableFuture.exceptionally(..)`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html#exceptionally-java.util.function.Function-)
 is a very powerful but often overlooked tool. It allows to inject [partial exception handling](https://stackoverflow.com/questions/37032990/separated-exception-handling-of-a-completablefuture)
@@ -182,6 +182,14 @@ particular case:
 future.exceptionally(partially(NoRouteToHostException.class, this::fallbackValueFor))
 ```
 
+### CompletableFuture.whenComplete(BiConsumer)
+
+```java
+future.whenComplete(failedWith(TimeoutException.class, e -> {
+    request.cancel();
+}))
+```
+
 Other missing pieces in `CompletableFuture`'s API are `exceptionallyCompose` and `handleCompose`. Both can be seen as
 a combination of `exceptionally` + `compose` and `handle` + `compose` respectively. They basically allow to supply
 another `CompletableFuture` rather than concrete values directly. This is allows for asynchronous fallbacks:
@@ -189,7 +197,6 @@ another `CompletableFuture` rather than concrete values directly. This is allows
 ```java
 exceptionallyCompose(users.find(name), e -> archive.find(name))
 ```
-
 
 ## Getting Help
 
