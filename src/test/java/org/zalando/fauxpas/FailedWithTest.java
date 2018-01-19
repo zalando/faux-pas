@@ -22,7 +22,18 @@ class FailedWithTest {
     }
 
     @Test
-    void shouldNotMatch() {
+    void shouldMatch() throws Throwable {
+        final CompletableFuture<String> original = new CompletableFuture<>();
+        original.whenComplete(failedWith(IllegalArgumentException.class, action));
+
+        final IllegalArgumentException e = new IllegalArgumentException();
+        original.completeExceptionally(e);
+
+        verify(action).tryAccept(e);
+    }
+
+    @Test
+    void shouldNotMatchIfCompletedSuccessfully() {
         final CompletableFuture<String> original = new CompletableFuture<>();
         original.whenComplete(failedWith(IllegalStateException.class, action));
 
@@ -32,14 +43,13 @@ class FailedWithTest {
     }
 
     @Test
-    void shouldMatch() throws Throwable {
+    void shouldNotMatchIfExceptionTypeIsDifferent() {
         final CompletableFuture<String> original = new CompletableFuture<>();
-        original.whenComplete(failedWith(IllegalArgumentException.class, action));
+        original.whenComplete(failedWith(IllegalStateException.class, action));
 
-        final IllegalArgumentException e = new IllegalArgumentException();
-        original.completeExceptionally(e);
+        original.completeExceptionally(new IllegalArgumentException());
 
-        verify(action).tryAccept(e);
+        verifyZeroInteractions(action);
     }
 
 }
