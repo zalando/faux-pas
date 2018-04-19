@@ -1,9 +1,13 @@
 package org.zalando.fauxpas;
 
 import lombok.SneakyThrows;
+import org.apiguardian.api.API;
 
 import java.util.function.BiPredicate;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
+@API(status = STABLE)
 @FunctionalInterface
 public interface ThrowingBiPredicate<T, U, X extends Throwable> extends BiPredicate<T, U> {
 

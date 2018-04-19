@@ -1,5 +1,7 @@
 package org.zalando.fauxpas;
 
+import org.apiguardian.api.API;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.BiFunction;
@@ -7,7 +9,11 @@ import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.STABLE;
 
+@API(status = STABLE)
 public final class FauxPas {
 
     FauxPas() {
@@ -64,6 +70,7 @@ public final class FauxPas {
         return predicate;
     }
 
+    @API(status = MAINTAINED)
     public static <T extends Throwable, R> Function<Throwable, R> partially(final Class<T> type,
             final ThrowingFunction<T, R, Throwable> function) {
         return partially(e -> {
@@ -74,6 +81,7 @@ public final class FauxPas {
         });
     }
 
+    @API(status = MAINTAINED)
     public static <R> Function<Throwable, R> partially(final ThrowingFunction<Throwable, R, Throwable> function) {
         return throwable -> {
             try {
@@ -86,6 +94,7 @@ public final class FauxPas {
         };
     }
 
+    @API(status = EXPERIMENTAL)
     public static <R, T extends Throwable> ThrowingBiConsumer<R, Throwable, Throwable> failedWith(
             final Class<T> type, final ThrowingConsumer<? super T, Throwable> action) {
         return (result, throwable) -> {
@@ -103,6 +112,7 @@ public final class FauxPas {
         return throwable instanceof CompletionException && cause != null ? cause : throwable;
     }
 
+    @API(status = EXPERIMENTAL)
     public static <T> CompletableFuture<T> handleCompose(final CompletableFuture<T> future,
             final BiFunction<T, Throwable, CompletableFuture<T>> function) {
         return future
@@ -110,6 +120,7 @@ public final class FauxPas {
                 .thenCompose(identity());
     }
 
+    @API(status = EXPERIMENTAL)
     public static <T> CompletableFuture<T> exceptionallyCompose(final CompletableFuture<T> future,
             final Function<Throwable, CompletableFuture<T>> function) {
         return future
