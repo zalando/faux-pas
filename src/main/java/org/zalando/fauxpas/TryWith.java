@@ -10,8 +10,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 public final class TryWith {
 
-    TryWith() {
-        // package private so we can trick code coverage
+    private TryWith() {
+
     }
 
     @API(status = MAINTAINED)

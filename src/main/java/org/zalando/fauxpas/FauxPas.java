@@ -16,8 +16,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 @API(status = STABLE)
 public final class FauxPas {
 
-    FauxPas() {
-        // package private so we can trick code coverage
+    private FauxPas() {
+
     }
 
     public static <X extends Throwable> ThrowingRunnable<X> throwingRunnable(
