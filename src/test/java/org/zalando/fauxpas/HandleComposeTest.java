@@ -7,9 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.zalando.fauxpas.FauxPas.exceptionallyCompose;
 import static org.zalando.fauxpas.FauxPas.handleCompose;
-import static org.zalando.fauxpas.FauxPas.partially;
 
 class HandleComposeTest {
 
