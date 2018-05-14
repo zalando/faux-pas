@@ -52,8 +52,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <slf4j.version>1.7.25</slf4j.version>
-        <junit-platform.version>1.0.0-RC2</junit-platform.version>
-        <junit-jupiter.version>5.0.0-RC2</junit-jupiter.version>
+        <junit-platform.version>1.2.0</junit-platform.version>
+        <junit-jupiter.version>5.2.0</junit-jupiter.version>
     </properties>
 
     <dependencies>
@@ -205,7 +205,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>2.21.0</version>
                 <configuration>
                     <parallel>classesAndMethods</parallel>
                     <threadCount>1</threadCount>
