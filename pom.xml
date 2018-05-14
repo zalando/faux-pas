@@ -52,7 +52,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <slf4j.version>1.7.25</slf4j.version>
-        <junit-platform.version>1.0.0-RC2</junit-platform.version>
+        <junit-platform.version>1.2.0</junit-platform.version>
         <junit-jupiter.version>5.0.0-RC2</junit-jupiter.version>
     </properties>
 
