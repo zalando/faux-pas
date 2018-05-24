@@ -12,7 +12,7 @@
 
 > **Faux pas** *noun*, /fəʊ pɑː/: blunder; misstep, false step
 
-_**F**aux  **P**as_ is library that simplifies error handling for **F**unctional **P**rogramming in Java. It fixes the
+_**F**aux  **P**as_ is a library that simplifies error handling for **F**unctional **P**rogramming in Java. It fixes the
 issue that none of the functional interfaces in the Java Runtime by default is allowed to throw checked exceptions.
 
 - **Technology stack**: Java 8+, functional interfaces
