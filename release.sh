@@ -1,8 +1,19 @@
 #!/bin/sh -ex
 
-: ${1?"Usage: $0 <major|minor|patch>"}
+: ${1?"Usage: $0 <[pre]major|[pre]minor|[pre]patch|prerelease>"}
 
-latest=$(git describe --abbrev=0 || echo 0.0.0)
-release=$(semver ${latest} -i $1 --preid RC)
+./mvnw scm:check-local-modification
 
-./mvnw scm:check-local-modification clean deploy scm:tag -P release -D revision=${release} -D tag=${release}
+current=$(git describe --abbrev=0 || echo 0.0.0)
+release=$(semver ${current} -i $1 --preid RC)
+next=$(semver ${release} -i minor)
+
+./mvnw versions:set -D newVersion=${release}
+git commit -am "Release ${release}"
+./mvnw clean deploy scm:tag -P release -D tag=${release} -D pushChanges=false
+
+./mvnw versions:set -D newVersion=${next}-SNAPSHOT
+git commit -am "Development ${next}-SNAPSHOT"
+
+git push
+git push --tags

@@ -6,7 +6,7 @@
 
     <groupId>org.zalando</groupId>
     <artifactId>faux-pas</artifactId>
-    <version>${revision}</version>
+    <version>0.8.0-SNAPSHOT</version>
 
     <name>Faux Pas</name>
     <description>Error handling in Functional Programming</description>
@@ -48,7 +48,6 @@
     </scm>
 
     <properties>
-        <revision>0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -144,7 +143,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.0.4</version>
+                                    <version>3.5.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -167,9 +166,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.ning.maven.plugins</groupId>
-                <artifactId>maven-duplicate-finder-plugin</artifactId>
-                <version>1.0.9</version>
+                <groupId>org.basepom.maven</groupId>
+                <artifactId>duplicate-finder-maven-plugin</artifactId>
+                <version>1.3.0</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -179,9 +178,9 @@
                         <configuration>
                             <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
                             <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
-                            <ignoredResources>
-                                <ignoredResource>.*</ignoredResource>
-                            </ignoredResources>
+                            <ignoredResourcePatterns>
+                                <ignoredResourcePattern>.*</ignoredResourcePattern>
+                            </ignoredResourcePatterns>
                         </configuration>
                     </execution>
                 </executions>
