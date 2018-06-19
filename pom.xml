@@ -6,7 +6,7 @@
 
     <groupId>org.zalando</groupId>
     <artifactId>faux-pas</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <name>Faux Pas</name>
     <description>Error handling in Functional Programming</description>
@@ -48,6 +48,7 @@
     </scm>
 
     <properties>
+        <revision>0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -275,14 +276,6 @@
                 <version>2.5</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9.4</version>
-                <configuration>
-                    <pushChanges>false</pushChanges>
-                    <tag>${project.version}</tag>
                 </configuration>
             </plugin>
         </plugins>
