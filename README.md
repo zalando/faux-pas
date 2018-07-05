@@ -208,6 +208,14 @@ If you have questions, concerns, bug reports, etc., please file an issue in this
 To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. For
 more details, check the [contribution guidelines](.github/CONTRIBUTING.md).
 
+## Versioning
+
+This project uses [Semantic Versioning 2.0.0](https://semver.org/) as its versioning scheme. The public API is declared
+as the set of every public language element that is directly or indirectly annotated with `@API` adhering to the
+semantics of 
+[`API.Status`](https://apiguardian-team.github.io/apiguardian/docs/current/api/org/apiguardian/api/API.Status.html), 
+the specified, documented behavior, artifact identifiers and optional dependency identifiers.
+
 ## Alternatives
 
 - [Lombok's `@SneakyThrows`](https://projectlombok.org/features/SneakyThrows.html)
