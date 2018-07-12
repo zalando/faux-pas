@@ -28,12 +28,6 @@
 
     <developers>
         <developer>
-            <name>Tronje Krop</name>
-            <email>tronje.krop@zalando.de</email>
-            <organization>Zalando SE</organization>
-            <organizationUrl>https://tech.zalando.com/</organizationUrl>
-        </developer>
-        <developer>
             <name>Willi Schönborn</name>
             <email>willi.schoenborn@zalando.de</email>
             <organization>Zalando SE</organization>
