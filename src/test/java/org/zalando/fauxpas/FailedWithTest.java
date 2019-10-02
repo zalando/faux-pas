@@ -8,7 +8,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.zalando.fauxpas.FauxPas.failedWith;
 
 class FailedWithTest {
@@ -39,7 +39,7 @@ class FailedWithTest {
 
         original.complete("result");
 
-        verifyZeroInteractions(action);
+        verifyNoInteractions(action);
     }
 
     @Test
@@ -49,7 +49,7 @@ class FailedWithTest {
 
         original.completeExceptionally(new IllegalArgumentException());
 
-        verifyZeroInteractions(action);
+        verifyNoInteractions(action);
     }
 
 }
