@@ -3,7 +3,7 @@
 [![Spilled coffee](docs/spilled-coffee.jpg)](https://pixabay.com/en/mistake-spill-slip-up-accident-876597/)
 
 [![Stability: Sustained](https://masterminds.github.io/stability/sustained.svg)](https://masterminds.github.io/stability/sustained.html)
-[![Build Status](https://img.shields.io/travis/zalando/faux-pas/master.svg)](https://travis-ci.org/zalando/faux-pas)
+![Build Status](https://github.com/zalando/faux-pas/workflows/build/badge.svg)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/faux-pas/master.svg)](https://coveralls.io/r/zalando/faux-pas)
 [![Code Quality](https://img.shields.io/codacy/grade/b3a619ff47574eb68f38bdf74906e91a/master.svg)](https://www.codacy.com/app/whiskeysierra/faux-pas)
 [![Javadoc](http://javadoc.io/badge/org.zalando/faux-pas.svg)](http://www.javadoc.io/doc/org.zalando/faux-pas)
