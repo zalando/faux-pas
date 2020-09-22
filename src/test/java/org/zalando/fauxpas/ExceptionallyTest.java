@@ -10,12 +10,7 @@ import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.zalando.fauxpas.FauxPas.partially;
@@ -29,7 +24,7 @@ class ExceptionallyTest {
 
         original.complete("result");
 
-        assertThat(unit.join(), is("result"));
+        assertThat(unit).isCompletedWithValue("result");
     }
 
     @Test
@@ -42,7 +37,7 @@ class ExceptionallyTest {
         original.completeExceptionally(new IllegalArgumentException());
 
         final CompletionException thrown = assertThrows(CompletionException.class, unit::join);
-        assertThat(thrown.getCause(), is(instanceOf(IllegalStateException.class)));
+        assertThat(thrown).getCause().isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -53,7 +48,7 @@ class ExceptionallyTest {
 
         original.completeExceptionally(new UnsupportedOperationException(new IOException()));
 
-        assertThat(unit.join(), is("fallback"));
+        assertThat(unit).isCompletedWithValue("fallback");
     }
 
     @Test
@@ -65,7 +60,7 @@ class ExceptionallyTest {
 
         original.complete("unused");
 
-        assertThat(unit.join(), is("fallback"));
+        assertThat(unit).isCompletedWithValue("fallback");
     }
 
     @Test
@@ -78,7 +73,7 @@ class ExceptionallyTest {
         original.complete("unused");
 
         final CompletionException thrown = assertThrows(CompletionException.class, unit::join);
-        assertThat(thrown.getCause(), is(nullValue()));
+        assertThat(thrown).hasNoCause();
     }
 
     @Test
@@ -87,15 +82,16 @@ class ExceptionallyTest {
         final CompletionException thrown = shouldRethrowOriginalWhenImplicitlyCompletedExceptionally(exception, e -> {
             throw new CompletionException(e);
         });
-        assertThat(thrown, is(not(sameInstance(exception))));
-        assertThat(thrown.getCause(), is(sameInstance(exception.getCause())));
+        assertThat(thrown)
+                .isNotSameAs(exception)
+                .getCause().isSameAs(exception.getCause());
     }
 
     @Test
     void shouldRethrowOriginalRuntimeWhenImplicitlyCompletedExceptionally() {
         final RuntimeException exception = new IllegalStateException();
         final CompletionException thrown = shouldRethrowOriginalWhenImplicitlyCompletedExceptionally(exception, rethrow());
-        assertThat(thrown.getCause(), is(sameInstance(exception)));
+        assertThat(thrown).getCause().isSameAs(exception);
     }
 
     @Test
@@ -103,7 +99,7 @@ class ExceptionallyTest {
         final Exception exception = new IOException();
         final CompletionException thrown = shouldRethrowOriginalWhenImplicitlyCompletedExceptionally(
                 new CompletionException(exception), rethrow());
-        assertThat(thrown.getCause(), is(sameInstance(exception)));
+        assertThat(thrown).getCause().isSameAs(exception);
     }
 
     private CompletionException shouldRethrowOriginalWhenImplicitlyCompletedExceptionally(
@@ -122,21 +118,21 @@ class ExceptionallyTest {
     void shouldRethrowPackedCompletionExceptionWhenImplicitlyCompletedExceptionally() {
         final Exception exception = new CompletionException(new UnsupportedOperationException());
         final CompletionException thrown = shouldRethrowPackedWhenImplicitlyCompletedExceptionally(exception);
-        assertThat(thrown, is(sameInstance(exception)));
+        assertThat(thrown).isSameAs(exception);
     }
 
     @Test
     void shouldRethrowPackedRuntimeExceptionWhenImplicitlyCompletedExceptionally() {
         final Exception exception = new UnsupportedOperationException();
         final CompletionException thrown = shouldRethrowPackedWhenImplicitlyCompletedExceptionally(exception);
-        assertThat(thrown.getCause(), is(sameInstance(exception)));
+        assertThat(thrown).getCause().isSameAs(exception);
     }
 
     @Test
     void shouldRethrowPackedThrowableWhenImplicitlyCompletedExceptionally() {
         final Exception exception = new IOException();
         final CompletionException thrown = shouldRethrowPackedWhenImplicitlyCompletedExceptionally(exception);
-        assertThat(thrown.getCause(), is(sameInstance(exception)));
+        assertThat(thrown).getCause().isSameAs(exception);
     }
 
     private CompletionException shouldRethrowPackedWhenImplicitlyCompletedExceptionally(final Exception exception) {
@@ -169,7 +165,7 @@ class ExceptionallyTest {
         original.completeExceptionally(exception);
 
         final CompletionException thrown = assertThrows(CompletionException.class, unit::join);
-        assertThat(thrown.getCause(), is(sameInstance(exception)));
+        assertThat(thrown).getCause().isSameAs(exception);
     }
 
     @Test
@@ -181,7 +177,7 @@ class ExceptionallyTest {
         final IllegalStateException exception = new IllegalStateException();
         original.completeExceptionally(exception);
 
-        assertThat(unit.join(), is("foo"));
+        assertThat(unit).isCompletedWithValue("foo");
     }
 
     @Test
@@ -194,7 +190,7 @@ class ExceptionallyTest {
         original.completeExceptionally(exception);
 
         final CompletionException thrown = assertThrows(CompletionException.class, unit::join);
-        assertThat(thrown.getCause(), is(sameInstance(exception)));
+        assertThat(thrown).getCause().isSameAs(exception);
     }
 
     private Function<String, String> failWith(final RuntimeException e) {
