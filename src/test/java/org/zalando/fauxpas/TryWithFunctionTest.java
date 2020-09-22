@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.Closeable;
 import java.io.IOException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItemInArray;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -37,7 +34,7 @@ final class TryWithFunctionTest {
         doReturn(value).when(function).tryApply(any());
 
         final Object actual = run();
-        assertThat(actual, is(sameInstance(value)));
+        assertThat(actual).isSameAs(value);
     }
 
     @Test
@@ -62,8 +59,8 @@ final class TryWithFunctionTest {
     void shouldThrowException() throws Exception {
         final Exception exception = new Exception();
         doThrow(exception).when(function).tryApply(any());
-        final Exception e = assertThrows(Exception.class, this::run);
-        assertThat(e, is(sameInstance(exception)));
+        final Exception thrown = assertThrows(Exception.class, this::run);
+        assertThat(thrown).isSameAs(exception);
     }
 
     @Test
@@ -77,8 +74,8 @@ final class TryWithFunctionTest {
     void shouldFailToClose() throws Exception {
         final IOException ioException = new IOException();
         doThrow(ioException).when(resource).close();
-        final IOException e = assertThrows(IOException.class, this::run);
-        assertThat(e, is(sameInstance(ioException)));
+        final IOException thrown = assertThrows(IOException.class, this::run);
+        assertThat(thrown).isSameAs(ioException);
     }
 
     @Test
@@ -88,10 +85,11 @@ final class TryWithFunctionTest {
         doThrow(exception).when(function).tryApply(any());
         doThrow(ioException).when(resource).close();
 
-        final Exception e = assertThrows(Exception.class, this::run);
+        final Exception thrown = assertThrows(Exception.class, this::run);
 
-        assertThat(e, is(sameInstance(exception)));
-        assertThat(e.getSuppressed(), hasItemInArray(sameInstance(ioException)));
+        assertThat(thrown)
+                .isSameAs(exception)
+                .hasSuppressedException(ioException);
     }
 
     private Object run() throws Exception {

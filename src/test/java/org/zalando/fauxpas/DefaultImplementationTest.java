@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.zalando.fauxpas.FauxPas.throwingBiConsumer;
 import static org.zalando.fauxpas.FauxPas.throwingBiFunction;
@@ -36,7 +34,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromRunnable() throws Exception {
+    void shouldNotRethrowExceptionFromRunnable() {
         final ThrowingRunnable<Exception> runnable = throwingRunnable(() -> {
         });
         shouldNotThrow(runnable);
@@ -51,7 +49,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromSupplier() throws Exception {
+    void shouldNotRethrowExceptionFromSupplier() {
         final ThrowingSupplier<Void, Exception> supplier = throwingSupplier(() -> null);
         shouldNotThrow(supplier::get);
     }
@@ -65,7 +63,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromConsumer() throws Exception {
+    void shouldNotRethrowExceptionFromConsumer() {
         final ThrowingConsumer<Void, Exception> consumer = throwingConsumer($ -> {
         });
         shouldNotThrow(() -> consumer.accept(null));
@@ -80,7 +78,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromFunction() throws Exception {
+    void shouldNotRethrowExceptionFromFunction() {
         final ThrowingFunction<Void, Void, Exception> function = throwingFunction((Void $) -> null);
         shouldNotThrow(() -> function.apply(null));
     }
@@ -94,7 +92,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromUnaryOperator() throws Exception {
+    void shouldNotRethrowExceptionFromUnaryOperator() {
         final ThrowingUnaryOperator<Void, Exception> operator = throwingUnaryOperator((Void $) -> null);
         shouldNotThrow(() -> operator.apply(null));
     }
@@ -108,7 +106,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromPredicate() throws Exception {
+    void shouldNotRethrowExceptionFromPredicate() {
         final ThrowingPredicate<Void, Exception> predicate = throwingPredicate((Void $) -> false);
         shouldNotThrow(() -> predicate.test(null));
     }
@@ -122,7 +120,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromBiConsumer() throws Exception {
+    void shouldNotRethrowExceptionFromBiConsumer() {
         final ThrowingBiConsumer<Void, Void, Exception> consumer = throwingBiConsumer(($, $2) -> {
         });
         shouldNotThrow(() -> consumer.accept(null, null));
@@ -137,7 +135,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromBiFunction() throws Exception {
+    void shouldNotRethrowExceptionFromBiFunction() {
         final ThrowingBiFunction<Void, Void, Void, Exception> function = throwingBiFunction(($, $2) -> null);
         shouldNotThrow(() -> function.apply(null, null));
     }
@@ -151,7 +149,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromBinaryOperator() throws Exception {
+    void shouldNotRethrowExceptionFromBinaryOperator() {
         final ThrowingBinaryOperator<Void, Exception> operator = throwingBinaryOperator(($, $2) -> null);
         shouldNotThrow(() -> operator.apply(null, null));
     }
@@ -165,7 +163,7 @@ final class DefaultImplementationTest {
     }
 
     @Test
-    void shouldNotRethrowExceptionFromBiPredicate() throws Exception {
+    void shouldNotRethrowExceptionFromBiPredicate() {
         final ThrowingBiPredicate<Void, Void, Exception> predicate = throwingBiPredicate(($, $2) -> false);
         shouldNotThrow(() -> predicate.test(null, null));
     }
@@ -175,8 +173,8 @@ final class DefaultImplementationTest {
     }
 
     private void shouldThrow(final Runnable thrower) {
-        assertThrows(Exception.class, thrower::run);
-        assertThat(exception, is(sameInstance(exception)));
+        Exception thrown = assertThrows(Exception.class, thrower::run);
+        assertThat(thrown).isSameAs(exception);
     }
 
 }

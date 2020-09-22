@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.zalando.fauxpas.FauxPas.handleCompose;
 
 class HandleComposeTest {
@@ -19,7 +18,7 @@ class HandleComposeTest {
 
         original.complete("foo");
 
-        assertThat(unit.join(), is("result"));
+        assertThat(unit).isCompletedWithValue("result");
     }
 
     @Test
@@ -30,7 +29,7 @@ class HandleComposeTest {
 
         original.completeExceptionally(new RuntimeException());
 
-        assertThat(unit.join(), is("result"));
+        assertThat(unit).isCompletedWithValue("result");
     }
 
 }
