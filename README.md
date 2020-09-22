@@ -4,12 +4,12 @@
 
 [![Stability: Sustained](https://masterminds.github.io/stability/sustained.svg)](https://masterminds.github.io/stability/sustained.html)
 ![Build Status](https://github.com/zalando/faux-pas/workflows/build/badge.svg)
-[![Coverage Status](https://img.shields.io/coveralls/zalando/faux-pas/master.svg)](https://coveralls.io/r/zalando/faux-pas)
-[![Code Quality](https://img.shields.io/codacy/grade/b3a619ff47574eb68f38bdf74906e91a/master.svg)](https://www.codacy.com/app/whiskeysierra/faux-pas)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/faux-pas/main.svg)](https://coveralls.io/r/zalando/faux-pas)
+[![Code Quality](https://img.shields.io/codacy/grade/b3a619ff47574eb68f38bdf74906e91a/main.svg)](https://www.codacy.com/app/whiskeysierra/faux-pas)
 [![Javadoc](http://javadoc.io/badge/org.zalando/faux-pas.svg)](http://www.javadoc.io/doc/org.zalando/faux-pas)
 [![Release](https://img.shields.io/github/release/zalando/faux-pas.svg)](https://github.com/zalando/faux-pas/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/faux-pas.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/faux-pas)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zalando/faux-pas/master/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zalando/faux-pas/main/LICENSE)
 
 > **Faux pas** *noun*, /fəʊ pɑː/: blunder; misstep, false step
 
